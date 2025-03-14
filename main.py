@@ -29,3 +29,9 @@ async def get_all_courses():
 @app.get("/courses/{course_id}")
 async def get_course(course_id: int):
     return echo.get_course(course_id)
+
+
+# 查询时间表 
+@app.get("/timeline")
+async def get_timeline_content():
+    return echo.get_timeline_content()

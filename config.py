@@ -41,15 +41,13 @@ my_js_code = """
 
 specific_week_js_code = """
    (function() {
-        const colors = ['#ff4500', '#32cd32', '#1e90ff', '#ff69b4', '#8a2be2', '#ffa500'];  // 柔和但鲜明的颜色
-        let colorIndex = 0;
-
         function hasBorder(element) {
             return window.getComputedStyle(element).borderWidth !== '0px';
         }
 
         function highlightElement(element) {
-            element.style.border = `3px solid ${colors[colorIndex % colors.length]}`;
+            var color = "#" + Math.floor(Math.random()*16777215).toString(16); // 生成随机颜色
+            element.style.border = "2px solid " + color;
             element.style.borderRadius = '5px';
             element.style.padding = '3px';
             colorIndex++;
@@ -129,4 +127,16 @@ specific_week_js_code = """
         });
 
     })();
+"""
+
+timeline_js_code = """
+(function() {
+    const colors = ['#ff4500', '#32cd32', '#1e90ff', '#ff69b4', '#8a2be2', '#ffa500'];  
+    document.querySelectorAll('.widget-container_widgetCard__hq1UB').forEach(element => {
+        let randomColor = colors[Math.floor(Math.random() * colors.length)];
+        element.style.border = `3px solid ${randomColor}`;
+        element.style.borderRadius = '5px';
+        element.style.padding = '3px';
+    });
+})();
 """
