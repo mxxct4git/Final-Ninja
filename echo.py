@@ -4,7 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from config import my_js_code, target_course
+from config import my_js_code, target_course, specific_week_js_code
 
 
 # 查询所有的课程
@@ -76,6 +76,7 @@ def get_course(course_id):
 
         # 打开第一周链接
         driver.get(week1_url)
+        driver.execute_script(specific_week_js_code)
 
         # 查找并抓取 overview的文本内容
         try:
