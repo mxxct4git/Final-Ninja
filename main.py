@@ -19,23 +19,23 @@ async def start():
     return {"message": "Hello World"}
 
 
-# 查询所有的课程列表
+# get all courses
 @app.get("/courses")
 async def get_all_courses():
     return echo.get_all_courses()
 
 
-# 查询指定课程
+# get specific course
 @app.get("/courses/{course_id}")
 async def get_course(course_id: int):
     return echo.get_course(course_id)
 
-# 查询指定课程测验
+# get the quiz list of specific course
 @app.get("/courses/{course_id}/quiz")
 async def get_quiz(course_id: int):
     return echo.get_quiz(course_id)
 
-# 查询时间表 
+# get timeline 
 @app.get("/timeline")
 async def get_timeline_content():
     return echo.get_timeline_content()
