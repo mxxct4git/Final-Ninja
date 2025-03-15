@@ -1,8 +1,8 @@
 extends Node2D
 
 # Gemini API配置
-const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
-var api_key = "AIzaSyAzEBj1LL_K3ooCO0qthD6x4jE12RGMpBo" # 需要设置你的Gemini API密钥
+const GEMINI_API_URL = "<Your Gemini API URL>" # 需要设置你的Gemini API URL
+var api_key = "<Your Gemini API Key>" # 需要设置你的Gemini API密钥
 
 # 在变量声明部分添加
 var countdown_bar: ProgressBar
