@@ -60,3 +60,8 @@ Features like ADHD-friendly fonts, dynamic reading modes, personalized music pla
 
 Let **Final Ninja** turn your stress into strategy and anxiety into action. With AI-powered planning and fun, gamified studying, you’ll tackle finals like a true ninja! 🥷🔥
 
+
+## contributor
+1. Mustang Wu: team leader, Godot development
+2. Joan Gao：adhd mode function development
+
