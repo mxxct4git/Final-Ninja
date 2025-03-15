@@ -49,13 +49,13 @@ def get_assignment_status(timeline_data):
     print("🔍 Check Assignment Status...")
     status_dict = {}
 
-    # 遍历 timeline_data
+    # loop timeline_data
     for entry in timeline_data:
-        for task in entry["任务列表"]:
-            status = task["状态"]  # 获取任务状态
-            task_name = task["任务"]  # 获取任务名称
+        for task in entry["assignments"]:
+            status = task["status"]
+            task_name = task["task"]
 
-            # 按状态分组任务
+            # group by status
             if status not in status_dict:
                 status_dict[status] = []
             status_dict[status].append(task_name)
@@ -64,35 +64,35 @@ def get_assignment_status(timeline_data):
 
 def get_total_assignments(timeline_data):
     assignment_count = {}
-    total_count = 0  # 统计所有任务的总数
+    total_count = 0
 
-    # 遍历 timeline_data
+    # loop timeline_data
     for entry in timeline_data:
-        date = entry["日期"]
-        count = len(entry["任务列表"])  # 计算该日期下任务的数量
+        date = entry["date"]
+        count = len(entry["assignments"])  # Calculate the number of tasks on that date
         assignment_count[date] = count
-        total_count += count  # 累加任务总数
+        total_count += count  #
 
-    # 添加总任务数
+    # get amount of all tasks
     assignment_count["total_count"] = total_count
     print(f"Total Assignments: {total_count}")
     return total_count
 
-# 查询所有的课程
+# get all courses
 def get_all_courses():
     target_courses = [f"FIT{course}" for course in target_course]
     return {"courses": target_courses}
 
-# 抓取Timeline内容 
+# get timeline content 
 def get_timeline_content():
     print("🚀 Starting timeline extraction...")
     print("=" * 50)
-    # 启动 WebDriver（确保已安装 chromedriver 并匹配 Chrome 版本）
+    # open WebDriver
     options = webdriver.ChromeOptions()
-    options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")  # 连接到已打开的 Chrome 浏览器
+    options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
     driver = webdriver.Chrome(options=options)
 
-    # 创建并切换到新标签页
+    # create new tab
     print("🌐 Connecting to Chrome browser...")
     print("📑 Creating new tab and loading student homepage...")
     driver.switch_to.new_window('tab')
@@ -106,63 +106,63 @@ def get_timeline_content():
 
     print("🎨 Applying timeline highlights...")
 
-    # 高亮
+    # highlight
     driver.execute_script(timeline_js_code)
     # time.sleep(10)
 
-    # 获取页面内容
+    # get page content
     print("🔍 Parsing timeline data...")
     page_content = driver.page_source
 
-    # 使用 BeautifulSoup 解析页面
+    # use BeautifulSoup to parse page
     soup = BeautifulSoup(page_content, 'html.parser')
     timeline_data = []
     
-    # 找到所有 class="day_day__xedDk" 的 div
+    # find all class="day_day__xedDk" <div>
     print("📊 Processing timeline entries...")
     days = soup.find_all('li', class_="day_dayWithAssessments__Go2a-")
 
 
     if not days:
-        print("⚠️ 未找到任何 timeline 数据")
+        print("⚠️ No timeline data found")
         return []
 
     total_days = len(days[1:])
     for idx, day in enumerate(days[1:], 1):
         print(f"📅 Processing day {idx}/{total_days}", end='\r')
 
-    # 遍历从索引 1 开始的所有元素
+    # Iterate over all elements starting from index 1
     print("\n🎯 Calculating assignment statistics...")
     for day in days[1:]:
-        # 获取日期（h3标签）
+        # Get the date (h3 tag)
         date_tag = day.find('h3')
-        date_text = date_tag.get_text(strip=True) if date_tag else "未知日期"
+        date_text = date_tag.get_text(strip=True) if date_tag else "Unknown date"
 
-        # 获取所有任务（遍历 ul > button）
+        # Get all tasks (traverse ul > button)
         assignments = []
         for item in day.find_all('button', class_='day_item__9bhZH'):
-            # 获取时间（span标签）
+            # Get time (span tag)
             time_tag = item.find('span', class_='day_dueTime__Q+9UA')
-            time_text = time_tag.get_text(strip=True) if time_tag else "未知时间"
+            time_text = time_tag.get_text(strip=True) if time_tag else "Unknown time"
 
-            # 获取任务标题（h4标签）
+            # Get the task title (h4 tag)
             title_tag = item.find('h4')
-            title_text = title_tag.get_text(strip=True) if title_tag else "未知任务"
+            title_text = title_tag.get_text(strip=True) if title_tag else "Unknown task"
 
-            # 获取提交状态（span class="status_status__CwfUR"）
+            # Get submission status（span class="status_status__CwfUR"）
             status_tag = item.find('span', class_='status_status__CwfUR')
-            status_text = status_tag.get_text(strip=True) if status_tag else "未知状态"
+            status_text = status_tag.get_text(strip=True) if status_tag else "Unknown status"
 
             assignments.append({
-                "时间": time_text,
-                "任务": title_text,
-                "状态": status_text
+                "time": time_text,
+                "task": title_text,
+                "status": status_text
             })
 
-        # 将日期与任务信息添加到 timeline
+        # Add date and task information to timeline
         timeline_data.append({
-            "日期": date_text,
-            "任务列表": assignments
+            "date": date_text,
+            "assignments": assignments
         })
     
     assignment_status = get_assignment_status(timeline_data)
@@ -196,37 +196,37 @@ def get_timeline_content():
     # Print timeline
     print(f"\n{Fore.BLUE}📅 Timeline Details:{Style.RESET_ALL}")
     for entry in timeline_data:
-        print(f"\n{Fore.CYAN}  {entry['日期']}{Style.RESET_ALL}")
-        for task in entry['任务列表']:
+        print(f"\n{Fore.CYAN}  {entry['date']}{Style.RESET_ALL}")
+        for task in entry['assignments']:
             status_icon = {
-                "已提交": "✅",
-                "未提交": "❌",
-                "进行中": "⏳",
-                "未知状态": "❓"
-            }.get(task['状态'], "❓")
+                "Submitted": "✅",
+                "Not Submitted": "❌",
+                "In progress": "⏳",
+                "Unknown status": "❓"
+            }.get(task['status'], "❓")
             
-            print(f"    {status_icon} {task['时间']} - {task['任务']}")
+            print(f"    {status_icon} {task['time']} - {task['task']}")
 
 
     print("=" * 50)
     return json.dumps(timeline_report, ensure_ascii=False, indent=4)
 
 
-# 查询指定课程
+# get specific course
 def get_course(course_id):
     print(f"🎓 Fetching course information for FIT{course_id}...")
     print("=" * 50)
-    # 启动 WebDriver（确保已安装 chromedriver 并匹配 Chrome 版本）
+    # open WebDriver
     options = webdriver.ChromeOptions()
     print("🌐 Connecting to Chrome browser...")
-    options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")  # 连接到已打开的 Chrome 浏览器
+    options.add_experimental_option("debuggerAddress", "127.0.0.1:9222") 
     driver = webdriver.Chrome(options=options)
     response = ""
 
-    # 保存原始标签页
+    # save original window tabs
     original_window = driver.current_window_handle
 
-    # 创建并切换到新标签页
+    # create a new tab
     print("📑 Creating new tab...")
     driver.switch_to.new_window('tab')
 
@@ -238,40 +238,38 @@ def get_course(course_id):
         time.sleep(1)
     print("\n✨ Page loaded successfully!")
 
-    # 等待页面加载
+    # wait for page loading
     time.sleep(3)
 
-    # 添加随机边框
+    # add random border
     driver.execute_script(my_js_code)
 
-    # 暂停看效果
+    # time sleep to check effect
     time.sleep(3)
 
-    # 获取页面内容
+    # get page content
     print("🔍 Scanning for course links...")
     page_content = driver.page_source
 
-    # 使用 BeautifulSoup 解析页面
+    # use BeautifulSoup to parse page content
     soup = BeautifulSoup(page_content, 'html.parser')
 
 
-    # 查找特定的 card-deck div
+    # find specific <div>
     course_links = soup.find_all('a', class_='aalink coursename mr-2 mb-1')
 
-    # 使用字典存储去重后的链接和对应的 target number
     filtered_links = {}
 
-    # 遍历并筛选链接
+    # loop course_links
     for link in course_links:
         course_text = link.text.strip().replace("\n", " ")
         course_url = link.get('href')
 
-        # 检查每个目标数字
+        # filter target course
         for number in target_course:
             if number in course_text:
                 filtered_links[course_url] = number
 
-    # 打印去重后的结果
     print(f"\n{Fore.CYAN}📚 Available Courses:{Style.RESET_ALL}")
     print("=" * 50)
     print(f"{Fore.YELLOW}{'Course ID':<15}{'Course URL':<45}{Style.RESET_ALL}")
@@ -283,7 +281,7 @@ def get_course(course_id):
         print(f"FIT{number:<11} {shortened_url}")
     print("=" * 50)
 
-    # 选择课程
+    # choose course
     chosen_url = None
     for url, number in filtered_links.items():
         if number == str(course_id):
@@ -292,14 +290,13 @@ def get_course(course_id):
 
     if chosen_url:
         driver.get(chosen_url)
-        week1_url = chosen_url + '&section=7'  # 第一周链接
-        week2_url = chosen_url + '&section=11'  # 第二周链接
+        week1_url = chosen_url + '&section=7'
+        week2_url = chosen_url + '&section=11'
 
-        # 打开第一周链接
+        # open week1_url link
         driver.get(week1_url)
         driver.execute_script(specific_week_js_code)
 
-        # 查找并抓取 overview的文本内容
         try:
             overview_div = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.ID, "collapseOverviewSection"))
@@ -322,7 +319,7 @@ def get_course(course_id):
         print(f"Course {course_id} not found")
         response = "Course not found"
 
-    # 关闭 WebDriver
+    # close WebDriver
     print("✅ Course information retrieval completed!")
     print("=" * 50)
     driver.quit()
