@@ -1,5 +1,3 @@
-OPENAI_API_KEY = "sk-"
-OPENAI_API_URL = "https://api.openai.com/v1/"
 
 # 课程编号
 target_course = ["9131", "9132", "9136", "9137", "5057",
@@ -40,93 +38,95 @@ my_js_code = """
         """
 
 specific_week_js_code = """
-   (function() {
-        function hasBorder(element) {
-            return window.getComputedStyle(element).borderWidth !== '0px';
+(function() {
+    var colorIndex = 0;  // 初始化 colorIndex
+
+    function hasBorder(element) {
+        return window.getComputedStyle(element).borderWidth !== '0px';
+    }
+
+    function highlightElement(element) {
+        var color = "#" + Math.floor(Math.random()*16777215).toString(16); // 生成随机颜色
+        element.style.border = "2px solid " + color;
+        element.style.borderRadius = '5px';
+        element.style.padding = '3px';
+        colorIndex++;
+    }
+
+    // 1️⃣ 仅高亮与 "Schedule" 同层级的元素
+    let scheduleElement = document.querySelector('a.courseindex-link.text-truncate');
+    if (scheduleElement && scheduleElement.innerText.trim() === 'Schedule') {
+        let parent = scheduleElement.parentElement;
+        if (parent) {
+            parent.querySelectorAll(':scope > *').forEach(el => {
+                if (el !== scheduleElement && !hasBorder(el)) {
+                    highlightElement(el);
+                }
+            });
         }
+    }
 
-        function highlightElement(element) {
-            var color = "#" + Math.floor(Math.random()*16777215).toString(16); // 生成随机颜色
-            element.style.border = "2px solid " + color;
-            element.style.borderRadius = '5px';
-            element.style.padding = '3px';
-            colorIndex++;
+    // 2️⃣ 处理特定 class 的 <div>
+    document.querySelectorAll('div[class="format-mst"], div[class="activity-item"], div[class="courseindex"]').forEach(div => {
+        if (!hasBorder(div) && !div.querySelector('div[style*="border"]')) {
+            highlightElement(div);
         }
+    });
 
-        // 1️⃣ 仅高亮与 "Schedule" 同层级的元素
-        let scheduleElement = document.querySelector('a.courseindex-link.text-truncate');
-        if (scheduleElement && scheduleElement.innerText.trim() === 'Schedule') {
-            let parent = scheduleElement.parentElement;
-            if (parent) {
-                parent.querySelectorAll(':scope > *').forEach(el => {
-                    if (el !== scheduleElement && !hasBorder(el)) {
-                        highlightElement(el);
-                    }
-                });
-            }
+    // 3️⃣ 高亮 <strong> 标签
+    document.querySelectorAll('strong').forEach(el => {
+        if (!hasBorder(el)) {
+            highlightElement(el);
         }
+    });
 
-        // 2️⃣ 处理特定 class 的 <div>
-        document.querySelectorAll('div[class="format-mst"], div[class="activity-item"], div[class="courseindex"]').forEach(div => {
-            if (!hasBorder(div) && !div.querySelector('div[style*="border"]')) {
-                highlightElement(div);
-            }
-        });
+    // 4️⃣ 高亮非空的 <p> 标签（排除空内容的 <p>）
+    document.querySelectorAll('p').forEach(el => {
+        if (el.innerText.trim().length > 0 && !hasBorder(el)) {
+            highlightElement(el);
+        }
+    });
 
-        // 3️⃣ 高亮 <strong> 标签
-        document.querySelectorAll('strong').forEach(el => {
-            if (!hasBorder(el)) {
-                highlightElement(el);
-            }
-        });
+    // 5️⃣ 高亮表格
+    document.querySelectorAll('table').forEach(table => {
+        if (!hasBorder(table)) {
+            highlightElement(table);
+        }
+    });
 
-        // 4️⃣ 高亮非空的 <p> 标签（排除空内容的 <p>）
-        document.querySelectorAll('p').forEach(el => {
-            if (el.innerText.trim().length > 0 && !hasBorder(el)) {
-                highlightElement(el);
-            }
-        });
+    // 6️⃣ 高亮 <a href> 但文本长度 < 20
+    document.querySelectorAll('a[href]').forEach(a => {
+        let text = a.innerText.trim();
+        if (text.length > 0 && text.length < 20 && !hasBorder(a)) {  
+            highlightElement(a);
+        }
+    });
 
-        // 5️⃣ 高亮表格
-        document.querySelectorAll('table').forEach(table => {
-            if (!hasBorder(table)) {
-                highlightElement(table);
-            }
-        });
+    // 7️⃣ 高亮特定 class 但要求 **完全匹配**
+    document.querySelectorAll('a.courseindex-link.text-truncate').forEach(a => {
+        if (a.className.trim() === 'courseindex-link text-truncate' && !hasBorder(a)) {
+            highlightElement(a);
+        }
+    });
 
-        // 6️⃣ 高亮 <a href> 但文本长度 < 20
-        document.querySelectorAll('a[href]').forEach(a => {
-            let text = a.innerText.trim();
-            if (text.length > 0 && text.length < 20 && !hasBorder(a)) {  
-                highlightElement(a);
-            }
-        });
+    document.querySelectorAll('.nav-link').forEach(el => {
+        if (el.className.trim() === 'nav-link' && !hasBorder(el)) {
+            highlightElement(el);
+        }
+    });
 
-        // 7️⃣ 高亮特定 class 但要求 **完全匹配**
-        document.querySelectorAll('a.courseindex-link.text-truncate').forEach(a => {
-            if (a.className.trim() === 'courseindex-link text-truncate' && !hasBorder(a)) {
-                highlightElement(a);
-            }
-        });
+    document.querySelectorAll('.activity-item').forEach(el => {
+        if (el.className.trim() === 'activity-item' && !hasBorder(el)) {
+            highlightElement(el);
+        }
+    });
 
-        document.querySelectorAll('.nav-link').forEach(el => {
-            if (el.className.trim() === 'nav-link' && !hasBorder(el)) {
-                highlightElement(el);
-            }
-        });
+    // 8️⃣ 排除 <a role="button">
+    document.querySelectorAll('a[role="button"]').forEach(a => {
+        a.style.border = 'none';
+    });
 
-        document.querySelectorAll('.activity-item').forEach(el => {
-            if (el.className.trim() === 'activity-item' && !hasBorder(el)) {
-                highlightElement(el);
-            }
-        });
-
-        // 8️⃣ 排除 <a role="button">
-        document.querySelectorAll('a[role="button"]').forEach(a => {
-            a.style.border = 'none';
-        });
-
-    })();
+})();
 """
 
 timeline_js_code = """

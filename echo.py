@@ -1,11 +1,46 @@
 import time
 import json
+import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from config import my_js_code, target_course, specific_week_js_code, timeline_js_code
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+OPENAI_API_BASE = os.getenv("OPENAI_API_BASE")
+
+
+def send_to_ai_agent(user_prompt):
+    print("🤖 Send to AI Agent...")
+    headers = {
+        "Authorization": f"Bearer {OPENAI_API_KEY}",
+        "Content-Type": "application/json"
+    }
+
+    data = {
+        "model": "gpt-4",
+        "messages": [
+            {"role": "system", "content": "You are a helpful AI assistant."},
+            {"role": "user", "content": user_prompt}
+        ]
+    }
+
+    response = requests.post(OPENAI_API_BASE, json=data, headers=headers)
+
+    if response.status_code == 200:
+        try:
+            return response.json()["choices"][0]["message"]["content"]
+        except (KeyError, IndexError) as e:
+            print("Unexpected response structure:", response.json())
+            return "Failed to parse AI response"
+    else:
+        print("Error:", response.status_code, response.text)
+        return "API request failed"
 
 def get_assignment_status(timeline_data):
     print("🔍 Check Assignment Status...")
@@ -21,7 +56,7 @@ def get_assignment_status(timeline_data):
             if status not in status_dict:
                 status_dict[status] = []
             status_dict[status].append(task_name)
-    print(status_dict)
+ 
     return json.dumps(status_dict, ensure_ascii=False, indent=4)
 
 def get_total_assignments(timeline_data):
@@ -110,14 +145,26 @@ def get_timeline_content():
         })
     print(timeline_data)
     
-    get_assignment_status(timeline_data)
+    assignment_status = get_assignment_status(timeline_data)
 
-    get_total_assignments(timeline_data)
+    total_count = get_total_assignments(timeline_data)
+
+    user_prompt = "Generate me a 48h-study plan please. "
+
+    ai_summary = send_to_ai_agent(str(timeline_data))
+
+    timeline_report = {
+        "total_count": total_count,
+        "assignment_status": assignment_status,
+        "ai_summary": ai_summary    
+    }
 
     driver.quit()
 
-    return timeline_data
+    print("check the timeline_report")
+    print(timeline_report)
 
+    return json.dumps(timeline_report, ensure_ascii=False, indent=4)
 
 
 # 查询指定课程
@@ -126,6 +173,7 @@ def get_course(course_id):
     options = webdriver.ChromeOptions()
     options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")  # 连接到已打开的 Chrome 浏览器
     driver = webdriver.Chrome(options=options)
+    response = ""
 
     # 保存原始标签页
     original_window = driver.current_window_handle
@@ -191,12 +239,19 @@ def get_course(course_id):
             overview_div = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.ID, "collapseOverviewSection"))
             )
-            print("第一周内容:\n", overview_div.text)
+
+            user_prompt = "Generate me a course explanation please according to the following overview I give you. You need to be concise. Answer briefly within 250 words."  + overview_div.text
+            response = send_to_ai_agent(user_prompt)
+            
         except Exception as e:
-            print("未找到课程介绍内容:", e)
+            print("Exception:", e)
+            response = "Failed to generate the overview content" 
 
     else:
         print(f"Course {course_id} not found")
+        response = "Course not found"
 
     # 关闭 WebDriver
     driver.quit()
+
+    return {course_id: response}
