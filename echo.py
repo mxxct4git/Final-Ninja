@@ -255,3 +255,10 @@ def get_course(course_id):
     driver.quit()
 
     return {course_id: response}
+
+def get_quiz(course_id):
+    ai_overview_summary = str(get_course(course_id))
+    user_prompt = "Generate me 10 multiple-choice quiz based on the course overview summary I give you. " + ai_overview_summary
+    ai_quiz = send_to_ai_agent(user_prompt)
+    print(ai_quiz)
+    return {course_id: ai_quiz}

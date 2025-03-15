@@ -30,6 +30,10 @@ async def get_all_courses():
 async def get_course(course_id: int):
     return echo.get_course(course_id)
 
+# 查询指定课程测验
+@app.get("/courses/{course_id}/quiz")
+async def get_quiz(course_id: int):
+    return echo.get_quiz(course_id)
 
 # 查询时间表 
 @app.get("/timeline")

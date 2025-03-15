@@ -1,0 +1,104 @@
+{
+    "quizzes": [
+      {
+        "question": "Which of the following variable declarations is invalid?",
+        "options": {
+          "A": "my_var = 10",
+          "B": "2nd_number = 5",
+          "C": "_count = 7",
+          "D": "price_per_item = 12.99"
+        },
+        "answer": "B"
+      },
+      {
+        "question": "What will be the output of the following Python code?\n\n```python\nx = 5\nif x > 3:\n    print(\"A\")\nelif x > 1:\n    print(\"B\")\nelse:\n    print(\"C\")\n```",
+        "options": {
+          "A": "A",
+          "B": "B",
+          "C": "C",
+          "D": "A B"
+        },
+        "answer": "A"
+      },
+      {
+        "question": "What will be the value of `result` after executing the following code?\n\n```python\nresult = 0\nfor i in range(1, 5):\n    result += i\n```",
+        "options": {
+          "A": "10",
+          "B": "15",
+          "C": "5",
+          "D": "20"
+        },
+        "answer": "A"
+      },
+      {
+        "question": "What will be the output of the following code?\n\n```python\nnums = [1, 2, 3, 4]\nnums.append(5)\nnums.pop(1)\nprint(nums)\n```",
+        "options": {
+          "A": "[1, 2, 3, 4]",
+          "B": "[1, 3, 4, 5]",
+          "C": "[2, 3, 4, 5]",
+          "D": "[1, 2, 4, 5]"
+        },
+        "answer": "B"
+      },
+      {
+        "question": "What will be the value of `d` after executing the following code?\n\n```python\nd = {\"name\": \"Alice\", \"age\": 25}\nd[\"city\"] = \"Melbourne\"\nd.pop(\"age\")\n```",
+        "options": {
+          "A": "{\"name\": \"Alice\", \"age\": 25}",
+          "B": "{\"name\": \"Alice\"}",
+          "C": "{\"name\": \"Alice\", \"city\": \"Melbourne\"}",
+          "D": "{\"name\": \"Alice\", \"age\": 25, \"city\": \"Melbourne\"}"
+        },
+        "answer": "C"
+      },
+      {
+        "question": "Which of the following is a correct way to define a Python function?",
+        "options": {
+          "A": "def add(x, y): return x + y",
+          "B": "function add(x, y): return x + y",
+          "C": "define add(x, y) { return x + y }",
+          "D": "func add(x, y): return x + y"
+        },
+        "answer": "A"
+      },
+      {
+        "question": "Which of the following is a correct way to define a Python class?",
+        "options": {
+          "A": "class Car(): pass",
+          "B": "class Car: pass",
+          "C": "class Car(object): pass",
+          "D": "All of the above"
+        },
+        "answer": "D"
+      },
+      {
+        "question": "Which line of code correctly reads a file's contents?",
+        "options": {
+          "A": "file = open(\"data.txt\", \"r\").read()",
+          "B": "file = open(\"data.txt\", \"w\").read()",
+          "C": "file = open(\"data.txt\", \"r\").write()",
+          "D": "file = read(\"data.txt\")"
+        },
+        "answer": "A"
+      },
+      {
+        "question": "What kind of exception will the following code raise?\n\n```python\nprint(10 / 0)\n```",
+        "options": {
+          "A": "SyntaxError",
+          "B": "ZeroDivisionError",
+          "C": "TypeError",
+          "D": "ValueError"
+        },
+        "answer": "B"
+      },
+      {
+        "question": "Which of the following correctly defines a Lambda function?",
+        "options": {
+          "A": "lambda x, y: return x + y",
+          "B": "add = lambda x, y: x + y",
+          "C": "lambda(x, y): x + y",
+          "D": "add = lambda x, y { x + y }"
+        },
+        "answer": "B"
+      }
+    ]
+  }

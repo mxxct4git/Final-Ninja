@@ -7,3 +7,4 @@
 5. 新建一个terminal调用接口 `curl -X GET http://127.0.0.1:8000/courses` 查看所有课程
 6. 新建一个terminal调用接口 `curl -X GET http://127.0.0.1:8000/courses/5225` 查看课程详情
 7. 新建一个terminal调用接口 `curl -X GET http://127.0.0.1:8000/timeline` 查看时间表详情
+8. 新建一个terminal调用接口 `curl -X GET http://127.0.0.1:8000/courses/5225/quiz` 查看quiz
