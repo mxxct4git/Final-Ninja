@@ -1,0 +1,26 @@
+48-Hour Python Exam Prep Plan – Ninja Mode 🥷🚀
+
+🕒 T-48 to T-36 Hours: Foundation & Concepts (12 hours total)
+1st Hour: Skim through all notes, slides, and past assignments—get a big-picture understanding.
+Next 5 Hours: Revise core concepts (data types, loops, functions, OOP, error handling).
+Next 6 Hours: Focus on Big O Notation, recursion, and algorithm efficiency—understand why things work, not just how.
+🔥 Ninja Tip: Summarize key ideas in your own words—explain to an imaginary student.
+
+🕒 T-36 to T-24 Hours: Problem-Solving & Debugging (12 hours total)
+First 6 Hours: Solve past exam questions timed, focusing on data structures (lists, dicts, sets), algorithms (sorting, searching), and tricky function-related problems.
+Next 3 Hours: Debug and analyze mistakes—learn why errors happened.
+Final 3 Hours: Speed drills! Solve small but varied problems quickly.
+🔥 Ninja Tip: Teach a friend or record yourself explaining solutions—it reinforces memory.
+
+🕒 T-24 to T-12 Hours: Advanced Topics & Edge Cases (12 hours total)
+6 Hours: Tackle complex problems (recursion, file handling, multi-threading if relevant).
+3 Hours: Practice writing clean, efficient code—pretend you’re coding in an interview.
+3 Hours: Review common pitfalls and tricky syntax issues.
+🔥 Ninja Tip: Write & run mini-experiments to test edge cases.
+
+🕒 T-12 to T-0 Hours: Review & Rest (12 hours total)
+6 Hours: Quick review of key formulas, patterns, and common mistakes.
+3 Hours: Restorative sleep. NO new topics—your brain needs processing time.
+3 Hours before exam: Light revision, deep breaths, and confidence mode ON.
+🔥 Ninja Tip: Walk in like you own the test—calm mind, steady hands, sharp code. 🥷🔥
+🚀 You got this! Code like a ninja, think like a strategist.
