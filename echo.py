@@ -9,7 +9,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from config import my_js_code, target_course, specific_week_js_code, timeline_js_code
 from dotenv import load_dotenv
 import os
+from colorama import Fore, Style, init
 
+load_dotenv()
+init(autoreset=True)
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENAI_API_BASE = os.getenv("OPENAI_API_BASE")
@@ -82,22 +85,33 @@ def get_all_courses():
 
 # 抓取Timeline内容 
 def get_timeline_content():
-
+    print("🚀 Starting timeline extraction...")
+    print("=" * 50)
     # 启动 WebDriver（确保已安装 chromedriver 并匹配 Chrome 版本）
     options = webdriver.ChromeOptions()
     options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")  # 连接到已打开的 Chrome 浏览器
     driver = webdriver.Chrome(options=options)
 
     # 创建并切换到新标签页
+    print("🌐 Connecting to Chrome browser...")
+    print("📑 Creating new tab and loading student homepage...")
     driver.switch_to.new_window('tab')
     driver.get('https://home.student.monash/')
-    time.sleep(10)
+    time.sleep(8)
+   
+    for i in range(10):
+        print(f"⏳ Loading page... {i*10}%", end='\r')
+        time.sleep(1)
+    print("\n✨ Page loaded successfully!")
+
+    print("🎨 Applying timeline highlights...")
 
     # 高亮
     driver.execute_script(timeline_js_code)
     # time.sleep(10)
 
     # 获取页面内容
+    print("🔍 Parsing timeline data...")
     page_content = driver.page_source
 
     # 使用 BeautifulSoup 解析页面
@@ -105,13 +119,20 @@ def get_timeline_content():
     timeline_data = []
     
     # 找到所有 class="day_day__xedDk" 的 div
+    print("📊 Processing timeline entries...")
     days = soup.find_all('li', class_="day_dayWithAssessments__Go2a-")
+
 
     if not days:
         print("⚠️ 未找到任何 timeline 数据")
         return []
 
+    total_days = len(days[1:])
+    for idx, day in enumerate(days[1:], 1):
+        print(f"📅 Processing day {idx}/{total_days}", end='\r')
+
     # 遍历从索引 1 开始的所有元素
+    print("\n🎯 Calculating assignment statistics...")
     for day in days[1:]:
         # 获取日期（h3标签）
         date_tag = day.find('h3')
@@ -143,7 +164,6 @@ def get_timeline_content():
             "日期": date_text,
             "任务列表": assignments
         })
-    print(timeline_data)
     
     assignment_status = get_assignment_status(timeline_data)
 
@@ -151,8 +171,10 @@ def get_timeline_content():
 
     user_prompt = "Generate me a 48h-study plan please. "
 
+    print("🤖 Generating AI study plan...")
     ai_summary = send_to_ai_agent(str(timeline_data))
 
+    print("\n📈 Preparing timeline report...")
     timeline_report = {
         "total_count": total_count,
         "assignment_status": assignment_status,
@@ -161,16 +183,42 @@ def get_timeline_content():
 
     driver.quit()
 
-    print("check the timeline_report")
-    print(timeline_report)
+    print("\n✅ Timeline extraction completed!")
 
+    print("=" * 50)
+    print(f"📝 Total assignments found: {total_count}")
+    print("🔄 Status breakdown:")
+    for status, tasks in json.loads(assignment_status).items():
+        print(f"  • {status}: {len(tasks)} tasks")
+
+    print("=" * 50)
+
+    # Print timeline
+    print(f"\n{Fore.BLUE}📅 Timeline Details:{Style.RESET_ALL}")
+    for entry in timeline_data:
+        print(f"\n{Fore.CYAN}  {entry['日期']}{Style.RESET_ALL}")
+        for task in entry['任务列表']:
+            status_icon = {
+                "已提交": "✅",
+                "未提交": "❌",
+                "进行中": "⏳",
+                "未知状态": "❓"
+            }.get(task['状态'], "❓")
+            
+            print(f"    {status_icon} {task['时间']} - {task['任务']}")
+
+
+    print("=" * 50)
     return json.dumps(timeline_report, ensure_ascii=False, indent=4)
 
 
 # 查询指定课程
 def get_course(course_id):
+    print(f"🎓 Fetching course information for FIT{course_id}...")
+    print("=" * 50)
     # 启动 WebDriver（确保已安装 chromedriver 并匹配 Chrome 版本）
     options = webdriver.ChromeOptions()
+    print("🌐 Connecting to Chrome browser...")
     options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")  # 连接到已打开的 Chrome 浏览器
     driver = webdriver.Chrome(options=options)
     response = ""
@@ -179,8 +227,16 @@ def get_course(course_id):
     original_window = driver.current_window_handle
 
     # 创建并切换到新标签页
+    print("📑 Creating new tab...")
     driver.switch_to.new_window('tab')
+
+    print("🔄 Loading Monash learning system...")
     driver.get('https://learning.monash.edu/my/')
+
+    for i in range(3):
+        print(f"⏳ Loading page... {i*33}%", end='\r')
+        time.sleep(1)
+    print("\n✨ Page loaded successfully!")
 
     # 等待页面加载
     time.sleep(3)
@@ -189,9 +245,10 @@ def get_course(course_id):
     driver.execute_script(my_js_code)
 
     # 暂停看效果
-    time.sleep(10)
+    time.sleep(3)
 
     # 获取页面内容
+    print("🔍 Scanning for course links...")
     page_content = driver.page_source
 
     # 使用 BeautifulSoup 解析页面
@@ -215,8 +272,16 @@ def get_course(course_id):
                 filtered_links[course_url] = number
 
     # 打印去重后的结果
+    print(f"\n{Fore.CYAN}📚 Available Courses:{Style.RESET_ALL}")
+    print("=" * 50)
+    print(f"{Fore.YELLOW}{'Course ID':<15}{'Course URL':<45}{Style.RESET_ALL}")
+    print("=" * 50)
+    
+    # Format course links output
     for url, number in filtered_links.items():
-        print(f"课程编号: {number}\t课程链接: {url}")
+        shortened_url = url[:42] + "..." if len(url) > 45 else url
+        print(f"FIT{number:<11} {shortened_url}")
+    print("=" * 50)
 
     # 选择课程
     chosen_url = None
@@ -242,6 +307,12 @@ def get_course(course_id):
 
             user_prompt = "Generate me a course explanation please according to the following overview I give you. You need to be concise. Answer briefly within 250 words."  + overview_div.text
             response = send_to_ai_agent(user_prompt)
+            # Format and print AI response
+            print(f"\n{Fore.CYAN}🤖 AI Course Summary:{Style.RESET_ALL}")
+            print("═" * 50)
+            print(f"{Fore.GREEN}{response}{Style.RESET_ALL}")
+            print("═" * 50)
+            
             
         except Exception as e:
             print("Exception:", e)
@@ -252,6 +323,8 @@ def get_course(course_id):
         response = "Course not found"
 
     # 关闭 WebDriver
+    print("✅ Course information retrieval completed!")
+    print("=" * 50)
     driver.quit()
 
     return {course_id: response}
