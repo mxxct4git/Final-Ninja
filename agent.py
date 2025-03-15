@@ -22,7 +22,7 @@ def send_to_ai_agent(text):
         ]
     }
 
-    response = requests.post(OPENAI_API_URL, json=data, headers=headers)
+    response = requests.post(OPENAI_API_BASE, json=data, headers=headers)
 
     if response.status_code == 200:
         print("AI Response:", response.json()["choices"][0]["message"]["content"])
