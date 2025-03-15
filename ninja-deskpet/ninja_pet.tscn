@@ -1,0 +1,237 @@
+[gd_scene load_steps=63 format=3 uid="uid://dutoisqc0bmpe"]
+
+[ext_resource type="Texture2D" uid="uid://dyhox2q848731" path="res://assets/ninja cat/animations/idle active/ninja-idle active_16.png" id="1_2ykyu"]
+[ext_resource type="Script" uid="uid://chmrtrlcc4x6k" path="res://ninja_pet.gd" id="1_d5j2u"]
+[ext_resource type="Texture2D" uid="uid://bmo3lyugpqe54" path="res://assets/ninja cat/animations/idle active/ninja-idle active_00.png" id="3_jaysb"]
+[ext_resource type="Texture2D" uid="uid://jq5101o2e781" path="res://assets/ninja cat/animations/idle active/ninja-idle active_01.png" id="4_ap48o"]
+[ext_resource type="Texture2D" uid="uid://cjkm2hix5yq8q" path="res://assets/ninja cat/animations/idle active/ninja-idle active_02.png" id="5_gqhwk"]
+[ext_resource type="Texture2D" uid="uid://vdpbnguu1xyc" path="res://assets/ninja cat/animations/idle active/ninja-idle active_04.png" id="6_e5cr5"]
+[ext_resource type="Texture2D" uid="uid://blwbu688hsj6p" path="res://assets/ninja cat/animations/idle active/ninja-idle active_05.png" id="7_pclx1"]
+[ext_resource type="Texture2D" uid="uid://ckw2c76lkrbbp" path="res://assets/ninja cat/animations/slash/ninja-slash_01.png" id="8_lhtsp"]
+[ext_resource type="Texture2D" uid="uid://bn5ael4cdau2s" path="res://assets/ninja cat/animations/slash/ninja-slash_03.png" id="9_wgf1l"]
+[ext_resource type="Texture2D" uid="uid://cx4oakt5lh6bx" path="res://assets/ninja cat/animations/slash/ninja-slash_04.png" id="10_86620"]
+[ext_resource type="Texture2D" uid="uid://xwhwbokwihni" path="res://assets/ninja cat/animations/slash/ninja-slash_05.png" id="11_8tvs2"]
+[ext_resource type="Texture2D" uid="uid://dw7jl8dxjslfs" path="res://assets/ninja cat/animations/slash/ninja-slash_06.png" id="12_1bffq"]
+[ext_resource type="Texture2D" uid="uid://dun485xr8hpuu" path="res://assets/ninja cat/animations/slash/ninja-slash_07.png" id="13_e7jgl"]
+[ext_resource type="Texture2D" uid="uid://bxkpadupt4chu" path="res://assets/ninja cat/animations/slash/ninja-slash_08.png" id="14_e643g"]
+[ext_resource type="Texture2D" uid="uid://bnue1rcfnarth" path="res://assets/ninja cat/animations/slash/ninja-slash_09.png" id="15_pw1o4"]
+[ext_resource type="Texture2D" uid="uid://c8hftp26f6lby" path="res://assets/ninja cat/animations/slash/ninja-slash_10.png" id="16_0demk"]
+[ext_resource type="Texture2D" uid="uid://s7d7qjoesfx8" path="res://assets/ninja cat/animations/pull lever/ninja-pull lever_00.png" id="17_its1o"]
+[ext_resource type="Texture2D" uid="uid://2036rfkxw8c2" path="res://assets/ninja cat/animations/pull lever/ninja-pull lever_01.png" id="18_lw6m3"]
+[ext_resource type="Texture2D" uid="uid://dpyvk0lcgeext" path="res://assets/ninja cat/animations/pull lever/ninja-pull lever_02.png" id="19_khwi7"]
+[ext_resource type="Texture2D" uid="uid://imfd2nxri4wf" path="res://assets/ninja cat/animations/pull lever/ninja-pull lever_03.png" id="20_6nrkv"]
+[ext_resource type="Texture2D" uid="uid://c1wakwnat1uf6" path="res://assets/ninja cat/animations/pull lever/ninja-pull lever_04.png" id="21_y0nmd"]
+[ext_resource type="Texture2D" uid="uid://ddfbskfu6o1b4" path="res://assets/ninja cat/animations/pull lever/ninja-pull lever_05.png" id="22_7otg1"]
+[ext_resource type="Texture2D" uid="uid://dlirss0tsvwbc" path="res://assets/ninja cat/animations/pull lever/ninja-pull lever_06.png" id="23_jm7nk"]
+[ext_resource type="Texture2D" uid="uid://dh26fsmdt7xjt" path="res://assets/ninja cat/animations/run/ninja-run_00.png" id="24_0eqi1"]
+[ext_resource type="Texture2D" uid="uid://l23x2yc55h64" path="res://assets/ninja cat/animations/run/ninja-run_01.png" id="25_b1j68"]
+[ext_resource type="Texture2D" uid="uid://kcr8vak1kaho" path="res://assets/ninja cat/animations/run/ninja-run_02.png" id="26_j2wp4"]
+[ext_resource type="Texture2D" uid="uid://cff6lgdiguubm" path="res://assets/ninja cat/animations/run/ninja-run_03.png" id="27_1jpsu"]
+[ext_resource type="Texture2D" uid="uid://c2spo2pqwbi30" path="res://assets/ninja cat/animations/run/ninja-run_04.png" id="28_n11lv"]
+[ext_resource type="Texture2D" uid="uid://bmmf0uytqc2mf" path="res://assets/ninja cat/animations/run/ninja-run_05.png" id="29_0agro"]
+[ext_resource type="Texture2D" uid="uid://cdxi6obvbdfiy" path="res://assets/ninja cat/animations/run/ninja-run_06.png" id="30_teq7m"]
+[ext_resource type="Texture2D" uid="uid://c44t6ts6qsu53" path="res://assets/ninja cat/animations/run/ninja-run_07.png" id="31_kjqae"]
+[ext_resource type="Texture2D" uid="uid://dge6jnmkrbmg7" path="res://assets/ninja cat/animations/run/ninja-run_08.png" id="32_4rdsi"]
+[ext_resource type="Texture2D" uid="uid://dou8skknnwdup" path="res://assets/ninja cat/animations/run/ninja-run_09.png" id="33_ngyfk"]
+[ext_resource type="Texture2D" uid="uid://cflicpqdyk6sv" path="res://assets/ninja cat/animations/run/ninja-run_10.png" id="34_fbub7"]
+[ext_resource type="Texture2D" uid="uid://b5w5gyp1xdk1w" path="res://assets/ninja cat/animations/die/ninja-die_00.png" id="35_upwqv"]
+[ext_resource type="Texture2D" uid="uid://dd5652b2t7nwe" path="res://assets/ninja cat/animations/die/ninja-die_01.png" id="36_nhgk2"]
+[ext_resource type="Texture2D" uid="uid://bmgpfa56nd4tc" path="res://assets/ninja cat/animations/die/ninja-die_02.png" id="37_5o8j2"]
+[ext_resource type="Texture2D" uid="uid://cfrnbuhteprdo" path="res://assets/ninja cat/animations/die/ninja-die_03.png" id="38_y4r13"]
+[ext_resource type="Texture2D" uid="uid://by64bgp64r6al" path="res://assets/ninja cat/animations/die/ninja-die_04.png" id="39_3gtu8"]
+[ext_resource type="Texture2D" uid="uid://dhuafohffjs20" path="res://assets/ninja cat/animations/die/ninja-die_05.png" id="40_rv6gm"]
+[ext_resource type="Texture2D" uid="uid://dng1y8hinvty3" path="res://assets/ninja cat/animations/die/ninja-die_06.png" id="41_vf3dr"]
+[ext_resource type="Texture2D" uid="uid://dqk2qjvr3bgxj" path="res://assets/ninja cat/animations/die/ninja-die_07.png" id="42_0qd3m"]
+[ext_resource type="Texture2D" uid="uid://ccwlvdp8xe3lc" path="res://assets/ninja cat/animations/die/ninja-die_08.png" id="43_q0px1"]
+[ext_resource type="Texture2D" uid="uid://brxgb2qt68yp6" path="res://assets/ninja cat/animations/die/ninja-die_09.png" id="44_j8737"]
+[ext_resource type="Texture2D" uid="uid://cl87vsovu02gx" path="res://assets/ninja cat/animations/die/ninja-die_10.png" id="45_nakk1"]
+[ext_resource type="Texture2D" uid="uid://dr6kxif7w46gt" path="res://assets/ninja cat/animations/die/ninja-die_11.png" id="46_6atdh"]
+[ext_resource type="Texture2D" uid="uid://ce3ibd16otaxk" path="res://assets/ninja cat/animations/die/ninja-die_12.png" id="47_srurj"]
+[ext_resource type="Texture2D" uid="uid://ce4a4cicjye4e" path="res://assets/ninja cat/animations/die/ninja-die_13.png" id="48_cq7mx"]
+[ext_resource type="Texture2D" uid="uid://bjs75otphqtrm" path="res://assets/ninja cat/animations/die/ninja-die_14.png" id="49_8rkg7"]
+[ext_resource type="Texture2D" uid="uid://bonqwj0a35ikh" path="res://assets/ninja cat/animations/die/ninja-die_15.png" id="50_fukko"]
+[ext_resource type="Texture2D" uid="uid://k7yrjpi2cs4r" path="res://assets/ninja cat/animations/die/ninja-die_16.png" id="51_q2mo0"]
+[ext_resource type="Texture2D" uid="uid://ca0sdufe03gam" path="res://assets/ninja cat/animations/die/ninja-die_17.png" id="52_x3fac"]
+[ext_resource type="Texture2D" uid="uid://djtaqr6f2mes6" path="res://assets/ninja cat/animations/die/ninja-die_18.png" id="53_xo002"]
+[ext_resource type="Texture2D" uid="uid://dovridqejaell" path="res://assets/cybercity.jpeg" id="54_ap48o"]
+
+[sub_resource type="Animation" id="Animation_d5j2u"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("1_2ykyu")]
+}
+
+[sub_resource type="Animation" id="Animation_md5ic"]
+resource_name = "danger"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [ExtResource("35_upwqv"), ExtResource("36_nhgk2"), ExtResource("37_5o8j2"), ExtResource("38_y4r13"), ExtResource("39_3gtu8"), ExtResource("40_rv6gm"), ExtResource("41_vf3dr"), ExtResource("42_0qd3m"), ExtResource("43_q0px1"), ExtResource("44_j8737"), ExtResource("45_nakk1"), ExtResource("46_6atdh"), ExtResource("47_srurj"), ExtResource("48_cq7mx"), ExtResource("49_8rkg7"), ExtResource("50_fukko"), ExtResource("51_q2mo0"), ExtResource("52_x3fac"), ExtResource("53_xo002")]
+}
+
+[sub_resource type="Animation" id="Animation_ll4k7"]
+resource_name = "happy"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [ExtResource("24_0eqi1"), ExtResource("25_b1j68"), ExtResource("26_j2wp4"), ExtResource("27_1jpsu"), ExtResource("28_n11lv"), ExtResource("29_0agro"), ExtResource("30_teq7m"), ExtResource("31_kjqae"), ExtResource("32_4rdsi"), ExtResource("33_ngyfk"), ExtResource("34_fbub7")]
+}
+
+[sub_resource type="Animation" id="Animation_2ykyu"]
+resource_name = "idle"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [ExtResource("3_jaysb"), ExtResource("4_ap48o"), ExtResource("5_gqhwk"), ExtResource("3_jaysb"), ExtResource("6_e5cr5"), ExtResource("7_pclx1")]
+}
+
+[sub_resource type="Animation" id="Animation_8mq02"]
+resource_name = "talking"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [ExtResource("8_lhtsp"), ExtResource("3_jaysb"), ExtResource("9_wgf1l"), ExtResource("10_86620"), ExtResource("11_8tvs2"), ExtResource("12_1bffq"), ExtResource("13_e7jgl"), ExtResource("14_e643g"), ExtResource("15_pw1o4"), ExtResource("16_0demk")]
+}
+
+[sub_resource type="Animation" id="Animation_asmaw"]
+resource_name = "thinking"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [ExtResource("17_its1o"), ExtResource("18_lw6m3"), ExtResource("19_khwi7"), ExtResource("20_6nrkv"), ExtResource("21_y0nmd"), ExtResource("22_7otg1"), ExtResource("23_jm7nk")]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_d5j2u"]
+_data = {
+&"RESET": SubResource("Animation_d5j2u"),
+&"danger": SubResource("Animation_md5ic"),
+&"happy": SubResource("Animation_ll4k7"),
+&"idle": SubResource("Animation_2ykyu"),
+&"talking": SubResource("Animation_8mq02"),
+&"thinking": SubResource("Animation_asmaw")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qvwsu"]
+
+[node name="ninja pet" type="Node2D"]
+script = ExtResource("1_d5j2u")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(249, 146)
+scale = Vector2(0.554253, 0.598496)
+texture = ExtResource("1_2ykyu")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_d5j2u")
+}
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="DialogPanel" type="Panel" parent="CanvasLayer"]
+offset_left = 420.0
+offset_top = 2.0
+offset_right = 1184.0
+offset_bottom = 915.0
+
+[node name="DialogLabel" type="Label" parent="CanvasLayer/DialogPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -9.0
+offset_top = 12.0
+offset_right = -9.0
+offset_bottom = 12.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="InputContainer" type="VBoxContainer" parent="CanvasLayer/DialogPanel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.13
+anchor_top = -0.07
+anchor_right = -0.13
+anchor_bottom = -0.07
+offset_left = 97.32
+offset_top = 1004.91
+offset_right = 857.32
+offset_bottom = 1136.91
+
+[node name="InputBox" type="LineEdit" parent="CanvasLayer/DialogPanel/InputContainer"]
+layout_mode = 2
+size_flags_stretch_ratio = 3.01
+placeholder_text = "Input your answer here..."
+
+[node name="ProgressBar" type="ProgressBar" parent="CanvasLayer/DialogPanel"]
+layout_mode = 0
+offset_left = -316.0
+offset_top = 346.0
+offset_right = -121.0
+offset_bottom = 373.0
+
+[node name="CountdownLabel" type="Label" parent="CanvasLayer/DialogPanel"]
+layout_mode = 0
+offset_left = -310.0
+offset_top = 345.0
+offset_right = -122.0
+offset_bottom = 373.0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ClickArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ClickArea"]
+shape = SubResource("RectangleShape2D_qvwsu")
+
+[node name="Cybercity" type="Sprite2D" parent="."]
+position = Vector2(804.5, 462)
+scale = Vector2(1.0231, 1.2337)
+texture = ExtResource("54_ap48o")
+
+[connection signal="text_submitted" from="CanvasLayer/DialogPanel/InputContainer/InputBox" to="." method="_on_input_box_text_submitted"]
+[connection signal="input_event" from="ClickArea" to="." method="_on_click_area_input_event"]

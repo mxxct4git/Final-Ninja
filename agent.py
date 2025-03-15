@@ -1,5 +1,11 @@
 import requests
-from config import OPENAI_API_KEY, OPENAI_API_URL
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+load_dotenv()
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+OPENAI_API_BASE = os.getenv("OPENAI_API_BASE")
 
 
 def send_to_ai_agent(text):
