@@ -64,4 +64,5 @@ Let **Final Ninja** turn your stress into strategy and anxiety into action. With
 ## contributor
 1. Mustang Wu: team leader, Godot development
 2. Joan Gao：adhd mode function development
+3. Panda Zhang: moodle courses analysis developer
 
