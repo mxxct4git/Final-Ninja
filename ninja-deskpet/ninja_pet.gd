@@ -1,21 +1,21 @@
 extends Node2D
 
-# Gemini API配置
-const GEMINI_API_URL = "<Your Gemini API URL>" # 需要设置你的Gemini API URL
-var api_key = "<Your Gemini API Key>" # 需要设置你的Gemini API密钥
+# Gemini API Configuration
+const GEMINI_API_URL = "<Your Gemini API URL>" # You need to set your Gemini API URL
+var api_key = "<Your Gemini API Key>" # You need to set your Gemini API Key
 
-# 在变量声明部分添加
+# Add to the variable declaration section
 var countdown_bar: ProgressBar
-var max_time: float = 1800.0  # 30分钟的倒计时
+var max_time: float = 1800.0  # 30 minutes countdown
 var current_time: float = 1800.0
 
-# 在文件开头的变量声明部分添加
+# Add to the variable declaration section at the beginning of the file
 var countdown_label: Label
 
-# 智能音乐服务URL
+# Smart music service URL
 const CHATJAMS_URL = "https://www.chatjams.ai/playlist/"
 
-# 预设的对话内容(英文)
+# Preset dialog content (English)
 var dialogues = [
 	"👋 Hi, I'm Final Ninja! My mission is to help people pass the final week.",
 	"📚 I noticed you're struggling with your exams. Don't worry, I'm here to help!",
@@ -24,7 +24,7 @@ var dialogues = [
 	"🤔 What can I help you with? (Type 'plan' for AI genrated study plan, 'quiz' for testing your knowledge, 'music' for generated playlist, 'adhd' for ADHD Reader Mode, or 'ranking' to check your ranking at ninja community)"
 ]
 
-# AI风格的思考短语
+# AI-style thinking phrases
 var thinking_phrases = [
 	"🧠 Analyzing your learning patterns...",
 	"🔍 Identifying knowledge gaps...",
@@ -33,7 +33,7 @@ var thinking_phrases = [
 	"🎯 Preparing personalized recommendations..."
 ]
 
-# 学习计划相关提示
+# Study plan related prompts
 var study_plan_dialogue = [
 	"📅 Let's create a 48-hour study plan to conquer your finals!",
 	"🧩 Based on your learning style, I recommend focusing on difficult topics first.",
@@ -41,7 +41,7 @@ var study_plan_dialogue = [
 	"⚡ Remember: strategic breaks are crucial for optimal learning!"
 ]
 
-# 音乐关键词和描述
+# Music keywords and descriptions
 var music_keywords = [
 	{
 		"keyword": "focus",
@@ -65,7 +65,7 @@ var music_keywords = [
 	}
 ]
 
-# 音乐歌单列表
+# Music playlist list
 var focus_playlists = [
 	{
 		"name": "Deep Focus",
@@ -96,7 +96,7 @@ var courses = [
 	"FIT9137 - Introduction to computer architecture and networks"
 ]
 
-# 健康提醒消息
+# Health reminder messages
 var health_reminders = [
 	"⏰ You've been studying for 2 hours straight! Time for a 5-minute break.",
 	"💧 Remember to stay hydrated! Grab some water and stretch a bit.",
@@ -105,28 +105,28 @@ var health_reminders = [
 	"🧠 Mental fatigue detected! A 10-minute break now will improve your productivity."
 ]
 
-var current_dialogue_index = 0  # 当前对话索引
-var user_input_mode = false  # 是否处于用户输入模式
-var conversation_history = []  # 对话历史记录
-var is_showing_music = false   # 是否正在显示音乐功能
-var is_typing_text = false     # 是否正在执行打字效果
-var typing_speed = 0.02        # 打字速度 (秒/字符)
-var current_display_text = ""  # 当前显示文本
-var full_text_to_display = ""  # 要显示的完整文本
-var typing_timer = 0.0         # 打字计时器
-var custom_playlist_mode = false # 是否处于自定义播放列表模式
-var study_time_start = 0       # 学习开始时间
-var health_reminder_timer = 0  # 健康提醒计时器
-var music_option_selection_pending = false # 是否正在等待音乐选项选择
+var current_dialogue_index = 0  # Current dialogue index
+var user_input_mode = false  # Whether in user input mode
+var conversation_history = []  # Conversation history
+var is_showing_music = false   # Whether currently displaying music feature
+var is_typing_text = false     # Whether executing typing effect
+var typing_speed = 0.02        # Typing speed (seconds/character)
+var current_display_text = ""  # Current display text
+var full_text_to_display = ""  # Complete text to display
+var typing_timer = 0.0         # Typing timer
+var custom_playlist_mode = false # Whether in custom playlist mode
+var study_time_start = 0       # Study start time
+var health_reminder_timer = 0  # Health reminder timer
+var music_option_selection_pending = false # Whether waiting for music option selection
 
-# 动画状态 - 基于已有动画资源
+# Animation states - based on existing animation resources
 enum AnimState {IDLE, TALKING, THINKING, HAPPY, DANGER}
 var current_anim_state = AnimState.IDLE
 
-# 增加窗口移动速度变量
-var window_move_speed = 40 # 从30增加到40，每次按键移动的像素数
+# Increase window movement speed variable
+var window_move_speed = 40 # Increased from 30 to 40, pixels moved per key press
 
-# 添加模拟排名数据
+# Add simulated ranking data
 var ninja_rankings = [
 	{
 		"name": "Final Ninja",
@@ -194,34 +194,34 @@ var ninja_rankings = [
 	}
 ]
 
-# 初始化
+# Initialization
 func _ready():
 	print("Initialization started...")
 	
-	# 设置透明背景 - 更全面的设置
+	# Set transparent background - more comprehensive settings
 	get_window().transparent_bg = true
 	
-	# 设置清除颜色为完全透明
+	# Set clear color to completely transparent
 	RenderingServer.set_default_clear_color(Color(0, 0, 0, 0))
 	
-	# 确保场景背景为透明
+	# Ensure the scene background is transparent
 	var root_viewport = get_tree().root
 	root_viewport.transparent_bg = true
 	
-	# 初始化对话框
+	# Initialize dialog box
 	var dialog_panel = $CanvasLayer/DialogPanel
 	dialog_panel.visible = false
 	
-	# 设置对话框样式 - 增加大小以适应内容
+	# Set dialog box style - increase size to fit content
 	var dialog_label = $CanvasLayer/DialogPanel/DialogLabel
-	dialog_label.size = Vector2(700, 800) # 增加宽度和高度以更好地填满panel
-	dialog_label.position = Vector2(10, 10) # 减少边距
+	dialog_label.size = Vector2(700, 800) # Increase width and height to better fill the panel
+	dialog_label.position = Vector2(10, 10) # Reduce margins
 	dialog_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	dialog_label.add_theme_font_size_override("font_size", 40) # 增加默认字体大小
+	dialog_label.add_theme_font_size_override("font_size", 40) # Increase default font size
 	
-	# 创建面板的样式并设置透明背景
+	# Create panel style and set transparent background
 	var panel_style = StyleBoxFlat.new()
-	panel_style.bg_color = Color(1, 1, 1, 0.5)  # 白色半透明背景
+	panel_style.bg_color = Color(1, 1, 1, 0.5)  # White semi-transparent background
 	panel_style.corner_radius_top_left = 20
 	panel_style.corner_radius_top_right = 20
 	panel_style.corner_radius_bottom_left = 20
@@ -230,50 +230,50 @@ func _ready():
 	panel_style.border_width_top = 2
 	panel_style.border_width_right = 2
 	panel_style.border_width_bottom = 2
-	panel_style.border_color = Color(1, 1, 1, 0.9)  # 边框颜色为白色
-	panel_style.shadow_color = Color(0, 0, 0, 0.5)  # 阴影颜色
+	panel_style.border_color = Color(1, 1, 1, 0.9)  # Border color is white
+	panel_style.shadow_color = Color(0, 0, 0, 0.5)  # Shadow color
 	panel_style.shadow_size = 15
 	panel_style.shadow_offset = Vector2(0, 4)
 
-	# 将自定义样式应用到对话框面板
+	# Apply custom style to dialog panel
 	dialog_panel.add_theme_stylebox_override("panel", panel_style)
-	# 可选：调整透明度增强毛玻璃效果
-	panel_style.bg_color = Color(0.1, 0.1, 0.1, 0.7)  # 设置半透明背景
+	# Optional: Adjust transparency to enhance frosted glass effect
+	panel_style.bg_color = Color(0.1, 0.1, 0.1, 0.7)  # Set semi-transparent background
 	dialog_panel.add_theme_stylebox_override("panel", panel_style)
-	# 可选：使用模糊背景图片作为背景（如果需要更强的毛玻璃效果）
+	# Optional: Use blurred background image as background (if stronger frosted glass effect is needed)
 	#var background = TextureRect.new()
-	#background.texture = load("Users/mustang/Downloads/cybercity.jpeg")  # 模糊背景图
-	#background.expand = true  # 拉伸填充背景
-	#dialog_panel.add_child(background)  # 将背景添加到对话框中
+	#background.texture = load("Users/mustang/Downloads/cybercity.jpeg")  # Blurred background image
+	#background.expand = true  # Stretch to fill background
+	#dialog_panel.add_child(background)  # Add background to dialog box
 
-	# 初始化倒计时进度条
+	# Initialize countdown progress bar
 	countdown_bar = $CanvasLayer/DialogPanel/ProgressBar
 	countdown_label = $CanvasLayer/DialogPanel/CountdownLabel
 	if countdown_bar:
 		countdown_bar.max_value = max_time
 		countdown_bar.value = current_time
-		countdown_bar.show_percentage = false  # 禁用百分比显示
+		countdown_bar.show_percentage = false  # Disable percentage display
 		
-		# 设置进度条样式
+		# Set progress bar style
 		var style = StyleBoxFlat.new()
-		style.bg_color = Color(0.2, 0.2, 0.2, 0.8)  # 背景颜色
-		style.set_corner_radius_all(8)  # 圆角
+		style.bg_color = Color(0.2, 0.2, 0.2, 0.8)  # Background color
+		style.set_corner_radius_all(8)  # Rounded corners
 		countdown_bar.add_theme_stylebox_override("background", style)
 		
 		var fill_style = StyleBoxFlat.new()
-		fill_style.bg_color = Color(0.3, 0.8, 0.3, 1.0)  # 填充颜色
-		fill_style.set_corner_radius_all(8)  # 圆角
+		fill_style.bg_color = Color(0.3, 0.8, 0.3, 1.0)  # Fill color
+		fill_style.set_corner_radius_all(8)  # Rounded corners
 		countdown_bar.add_theme_stylebox_override("fill", fill_style)
 	
 	if countdown_label:
 		countdown_label.add_theme_font_size_override("font_size", 28)
 		countdown_label.add_theme_color_override("font_color", Color(1, 1, 1))
 	
-	# 初始化用户输入框样式
+	# Initialize user input box style
 	var input_box = $CanvasLayer/DialogPanel/InputContainer
 	input_box.visible = false
 	
-	# 为输入框添加现代样式
+	# Add modern style to the input field
 	var input_field = $CanvasLayer/DialogPanel/InputContainer/InputBox
 	if input_field:
 		var input_style = StyleBoxFlat.new()
@@ -289,25 +289,25 @@ func _ready():
 		input_style.border_color = Color(0.3, 0.7, 1.0, 0.6)
 		input_field.add_theme_stylebox_override("normal", input_style)
 		
-		# 设置输入框文字颜色和字体大小
+		# Set input field text color and font size
 		input_field.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9))
-		input_field.add_theme_font_size_override("font_size", 20) # 增加输入框字体大小
+		input_field.add_theme_font_size_override("font_size", 20) # Increase input field font size
 	
-	# 预加载所有动画
+	# Preload all animations
 	preload_animations()
 	
-	# 启动动画
+	# Start animation
 	change_animation(AnimState.IDLE)
 	print("Initialization completed")
 	
-	# 开始AI启动序列
+	# Start AI startup sequence
 	await get_tree().create_timer(0.5).timeout
 	show_next_dialogue()
 	
-# 预加载动画以确保平滑播放
+# Preload animations to ensure smooth playback
 func preload_animations():
-	# 确保所有动画都在AnimationPlayer中创建
-	# 这里只是检查是否存在，实际创建应在编辑器中完成
+	# Ensure all animations are created in AnimationPlayer
+	# This just checks if they exist, actual creation should be done in the editor
 	if not $AnimationPlayer.has_animation("idle"):
 		print("Warning: 'idle' animation not found!")
 	if not $AnimationPlayer.has_animation("talking"):
@@ -319,68 +319,68 @@ func preload_animations():
 	if not $AnimationPlayer.has_animation("danger"):
 		print("Warning: 'danger' animation not found!")
 	
-# 添加 _input 函数作为备用的点击检测方法
+# Add _input function as a backup click detection method
 
 
 func _process(delta):
-	# 更新倒计时
+	# Update countdown
 	if countdown_bar and current_time > 0:
-		current_time -= delta / 1  # 转换为秒
+		current_time -= delta / 1  # Convert to seconds
 		countdown_bar.value = current_time
 		
-		# 更新进度条颜色
-		if current_time <= 300:  # 小于等于5分钟 (300秒)
+		# Update progress bar color
+		if current_time <= 300:  # Less than or equal to 5 minutes (300 seconds)
 			var fill_style = StyleBoxFlat.new()
-			fill_style.bg_color = Color(0.8, 0.2, 0.2, 1.0)  # 红色
-			fill_style.set_corner_radius_all(8)  # 保持圆角
+			fill_style.bg_color = Color(0.8, 0.2, 0.2, 1.0)  # Red
+			fill_style.set_corner_radius_all(8)  # Keep rounded corners
 			countdown_bar.add_theme_stylebox_override("fill", fill_style)
 		
-		# 更新显示文本
+		# Update displayed text
 		if countdown_label:
 			var minutes = int(current_time) / 60
 			var seconds = int(current_time) % 60
 			countdown_label.text = "%d:%02d" % [minutes, seconds]
 
-	# 确保背景始终保持透明
+	# Ensure background remains transparent
 	RenderingServer.set_default_clear_color(Color(0, 0, 0, 0))
 	
-	# 确保动画一直播放
+	# Ensure animation plays continuously
 	if not $AnimationPlayer.is_playing():
 		match current_anim_state:
 			AnimState.IDLE:
 				$AnimationPlayer.play("idle")
 			AnimState.TALKING:
-				$AnimationPlayer.play("talking")  # 使用talking动画表示说话
+				$AnimationPlayer.play("talking")  # Use talking animation for speaking
 			AnimState.THINKING:
-				$AnimationPlayer.play("thinking")  # 使用thinking动画表示思考
+				$AnimationPlayer.play("thinking")  # Use thinking animation for thinking
 			AnimState.HAPPY:
-				$AnimationPlayer.play("happy")  # 使用happy动画表示高兴
+				$AnimationPlayer.play("happy")  # Use happy animation for happiness
 			AnimState.DANGER:
-				$AnimationPlayer.play("danger")  # 使用danger动画表示危险情况
+				$AnimationPlayer.play("danger")  # Use danger animation for dangerous situation
 	
-	# 处理打字效果
+	# Handle typing effect
 	if is_typing_text:
 		typing_timer += delta
 		if typing_timer >= typing_speed:
 			typing_timer = 0.0
 			if current_display_text.length() < full_text_to_display.length():
 				current_display_text += full_text_to_display[current_display_text.length()]
-				# 添加空值检查
+				# Add null check
 				var dialog_label = $CanvasLayer/DialogPanel/DialogLabel
 				if dialog_label and is_instance_valid(dialog_label):
 					dialog_label.text = current_display_text
 			else:
 				is_typing_text = false
 	
-	# 处理健康提醒
+	# Handle health reminder
 	if study_time_start > 0:
 		health_reminder_timer += delta
-		# 每30分钟(1800秒)提醒一次
+		# Every 30 minutes (1800 seconds)
 		if health_reminder_timer >= 1800:
 			health_reminder_timer = 0
 			show_health_reminder()
 
-# 改变动画状态
+# Change animation state
 func change_animation(new_state):
 	current_anim_state = new_state
 	
@@ -388,120 +388,120 @@ func change_animation(new_state):
 		AnimState.IDLE:
 			$AnimationPlayer.play("idle")
 		AnimState.TALKING:
-			$AnimationPlayer.play("talking")  # 使用talking动画表示说话
+			$AnimationPlayer.play("talking")  # Use talking animation for speaking
 		AnimState.THINKING:
-			$AnimationPlayer.play("thinking")  # 使用thinking动画表示思考
+			$AnimationPlayer.play("thinking")  # Use thinking animation for thinking
 		AnimState.HAPPY:
-			$AnimationPlayer.play("happy")  # 使用happy动画表示高兴
+			$AnimationPlayer.play("happy")  # Use happy animation for happiness
 		AnimState.DANGER:
-			$AnimationPlayer.play("danger")  # 使用danger动画表示危险情况
+			$AnimationPlayer.play("danger")  # Use danger animation for dangerous situation
 
-# 显示带有打字效果的文本
+# Display text with typing effect
 func display_text_with_typing_effect(text):
 	is_typing_text = true
 	current_display_text = ""
 	full_text_to_display = text
 	typing_timer = 0.0
 	
-	# 确保DialogLabel存在并且字体大小正确
+	# Ensure DialogLabel exists and font size is correct
 	var dialog_label = $CanvasLayer/DialogPanel/DialogLabel
 	if dialog_label and is_instance_valid(dialog_label):
 		if not dialog_label is RichTextLabel:
-			dialog_label.add_theme_font_size_override("font_size", 24) # 确保使用新的字体大小
+			dialog_label.add_theme_font_size_override("font_size", 24) # Ensure using new font size
 
-# 显示下一句对话
+# Show next dialogue
 func show_next_dialogue():
 	print("Showing dialogue: ", current_dialogue_index)
 	if user_input_mode or is_showing_music or is_typing_text:
 		return
 		
 	if current_dialogue_index < dialogues.size():
-		# 显示对话框
+		# Show dialog box
 		$CanvasLayer/DialogPanel.visible = true
 		
-		# 更新对话内容 - 使用打字效果
+		# Update dialogue content - use typing effect
 		display_text_with_typing_effect(dialogues[current_dialogue_index])
 		current_dialogue_index += 1
 		
-		# 切换到说话动画
+		# Switch to speaking animation
 		change_animation(AnimState.TALKING)
 		
-		# 一段时间后回到空闲状态
+		# Wait for a while before returning to idle state
 		await get_tree().create_timer(2.5).timeout
 		change_animation(AnimState.IDLE)
 	else:
-		# 对话结束后，显示用户输入界面
+		# Dialogue ended, show user input interface
 		show_user_input()
 
-# 显示用户输入界面
+# Show user input interface
 func show_user_input():
 	user_input_mode = true
 	custom_playlist_mode = false
-	# 显示对话框
+	# Show dialog box
 	$CanvasLayer/DialogPanel.visible = true
 	
-	# 如果是focus jazz模式，显示特殊文本
+	# If focus jazz mode, show special text
 	var user_input = $CanvasLayer/DialogPanel/InputContainer/InputBox
 	if user_input.text == "focus jazz" || user_input.text == "ninja vibe":
 		display_text_with_typing_effect("Creating a '" + user_input.text + "' playlist for you!.")
-		# 切换到说话动画
+		# Switch to speaking animation
 		change_animation(AnimState.TALKING)
 		await get_tree().create_timer(2.0).timeout
-		# 直接调用音乐生成功能
+		# Directly call music generation function
 		generate_custom_playlist(user_input.text)
 		return
-	# 如果是首次显示用户输入界面，则显示完整的对话内容
+	# If this is the first time showing user input interface, show full dialogue content
 	elif current_dialogue_index == dialogues.size() and current_display_text.strip_edges().is_empty():
-		# 获取最后一条对话内容
+		# Get last dialogue content
 		var last_dialogue = dialogues[dialogues.size() - 1]
-		# 添加输入提示
+		# Add input prompt
 		var prompt_text = last_dialogue + "\n\n(✍️ Please type your question or command...)"
 		display_text_with_typing_effect(prompt_text)
 	else:
-		# 如果已经有对话内容在显示，则检查是否已包含输入提示
+		# If there is already dialogue content being displayed, check if input prompt is already included
 		if not is_typing_text and current_display_text.length() > 0:
 			var current_text = current_display_text
-			# 检查是否已经有输入提示
+			# Check if input prompt is already included
 			if not "(Type " in current_text and not "(Please type" in current_text and not "(✍️" in current_text:
 				current_text += "\n\n(✍️ Type your next question or command...)"
 				display_text_with_typing_effect(current_text)
 		elif current_display_text.strip_edges().is_empty():
-			# 如果没有显示任何内容，则显示一个基本提示
+			# If no content is being displayed, show a basic prompt
 			display_text_with_typing_effect("🤔 What can I help you with? (Type 'plan' for study plan, 'test' for practice, or 'music' for focus music)")
 	
-	# 等待打字效果完成
+	# Wait for typing effect to complete
 	await get_tree().create_timer(1.0).timeout
 	
-	# 显示输入容器
+	# Show input container
 	var input_container = $CanvasLayer/DialogPanel/InputContainer
 	input_container.visible = true
 	
-	# 清空并聚焦输入框
+	# Clear and focus input box
 	var input_box = $CanvasLayer/DialogPanel/InputContainer/InputBox
 	input_box.text = ""
 	input_box.grab_focus()
 	
-	# 切换到空闲动画
+	# Switch to idle animation
 	change_animation(AnimState.IDLE)
 
-# 处理用户输入
+# Handle user input
 func _on_send_button_pressed():
 	var input_box = $CanvasLayer/DialogPanel/InputContainer/InputBox
 	var user_message = input_box.text
-	print(">>>> 用户当前输入：" + user_message)
+	print(">>>> User current input: " + user_message)
 
 	if user_message.strip_edges().length() > 0:
-		# 隐藏输入框
+		# Hide input box
 		$CanvasLayer/DialogPanel/InputContainer.visible = false
 		
-		# 在处理输入前记录当前模式状态（仅用于调试）
+		# Record current mode status before processing input (for debugging)
 		print("Processing user input, mode status:")
 		print("- custom_playlist_mode: ", custom_playlist_mode)
 		print("- is_showing_music: ", is_showing_music)
 		print("- user_input_mode: ", user_input_mode)
 		print("- music_option_selection_pending: ", music_option_selection_pending)
 		
-		# 检查通用返回命令
+		# Check for general return command
 		var lower_message = user_message.to_lower().strip_edges()
 		if lower_message == "back" or lower_message == "menu":
 			print("User requested to return to main menu")
@@ -511,17 +511,17 @@ func _on_send_button_pressed():
 			show_user_input()
 			return
 		
-		# 检查是否是课程选择
+		# Check if it's a course selection
 		if user_message.is_valid_int():
 			var course_index = user_message.to_int() - 1
 			if course_index >= 0 and course_index < courses.size():
-				show_study_plan()  # 显示选中课程的学习计划
+				show_study_plan()  # Show study plan for selected course
 				return
 
-		# 首先检查是否正在等待音乐选项选择
+		# First check if waiting for music option selection
 		if music_option_selection_pending:
 			print("Processing music option selection: ", user_message)
-			music_option_selection_pending = false  # 重置标志
+			music_option_selection_pending = false  # Reset flag
 			
 			var choice = user_message.strip_edges()
 			if choice == "1":
@@ -539,16 +539,16 @@ func _on_send_button_pressed():
 				show_user_input()
 			return
 		
-		# 检查特殊命令
+		# Check for special commands
 		elif lower_message == "ranking":
 			show_ninja_ranking()
 		elif lower_message == "music":
 			show_music_options()
 		elif lower_message == "plan":
-			# 先查询课程列表
+			# First check course list
 			show_course_selection()
 		elif lower_message == "9136":
-			# 展示课程学习summary+plan
+			# Show course learning summary + plan
 			show_study_plan()
 		elif lower_message == "quiz":
 			show_practice_test()
@@ -557,88 +557,88 @@ func _on_send_button_pressed():
 		elif lower_message == "adhd":
 			show_adhd_reader_mode()
 		elif lower_message == "1b 2a 3c":
-			# 处理用户答案
+			# Process user answers
 			process_quiz_answer()
 		else:
-			# 处理一般用户输入
+			# Handle general user input
 			process_user_input(user_message)
 
-# 处理用户quiz答案
+# Process user quiz answers
 func process_quiz_answer():
 	is_showing_music = false
 	user_input_mode = false
 	
-	# 显示对话框
+	# Show dialog box
 	$CanvasLayer/DialogPanel.visible = true
 	
-	# 播放思考动画
+	# Play thinking animation
 	change_animation(AnimState.THINKING)
 	
-	# 显示评估消息
+	# Display evaluation message
 	display_text_with_typing_effect("🤔 Evaluating your answers...")
 	
-	# 等待短暂时间以显示动画效果
+	# Wait for a short time to display animation effect
 	await get_tree().create_timer(1.5).timeout
 	
-	# 用户答案和正确答案
+	# User answers and correct answers
 	var user_answers = "1b 2a 3c"
 	var correct_answers = "1b 2a 3c"
-	var score = 3  # 满分，因为答案完全匹配
+	var score = 3  # Full score, as answers are completely matched
 	
-	# 答案解释
+	# Answer explanation
 	var explanations = {
 		"1": "✅ Correct! Variable names cannot start with numbers. '2nd_number' is an invalid variable name.",
 		"2": "✅ Correct! In Python, using the 'def' keyword is the correct syntax for defining functions.",
 		"3": "✅ Correct! In Python, both class definition methods are valid."
 	}
 	
-	# 构建结果文本
+	# Build result text
 	var result_text = "📝 Quiz Results:\n\n"
 	result_text += "🌟 Perfect! You got all questions right!\n\n"
 	result_text += "Detailed Explanations:\n"
 	
-	# 添加每个问题的解释
+	# Add explanation for each question
 	for i in range(1, 4):
 		result_text += str(i) + ". " + explanations[str(i)] + "\n\n"
 	
-	# 添加鼓励性的反馈
+	# Add encouraging feedback
 	result_text += "💪 Excellent! You've mastered these fundamental concepts.\n"
 	result_text += "Ready for the next challenge?\n\n"
 	result_text += "✍️ Type your next question or command..."
 	
-	# 切换到开心动画
+	# Switch to happy animation
 	change_animation(AnimState.HAPPY)
 	
-	# 显示结果
+	# Display result
 	display_text_with_typing_effect(result_text)
 	
-	# 延迟后显示输入界面
+	# Delay before showing input interface
 	await get_tree().create_timer(2.0).timeout
 	show_user_input()
 
-# 显示音乐选项
+# Show music options
 func show_music_options():
 	is_showing_music = true
 	user_input_mode = false
-	custom_playlist_mode = false  # 确保开始时重置此模式
+	custom_playlist_mode = false  # Ensure reset at the start
 	
-	# 先清除当前显示的所有文本
+	# First clear any existing text being displayed
 	current_display_text = ""
 	full_text_to_display = ""
 	
-	# 显示对话框
+	# Show dialog box
 	$CanvasLayer/DialogPanel.visible = true
 	
-	# 显示加载中提示，给UI更新提供时间
+	# Display loading message, giving UI time to update
 	display_text_with_typing_effect("🎵 Loading music options...")
 	
-	# 播放开心动画
+	# Play happy animation
 	change_animation(AnimState.HAPPY)
 	
-	# 等待短暂时间以确保UI更新
+	# Wait for a short time to ensure UI updates
 	await get_tree().create_timer(0.5).timeout
 	
-	# 创建更简洁的现代菜单，避免重叠和乱码问题
+	# Create a more concise modern menu, avoiding overlap and encoding issues
 	var menu_text = "[center][color=#3498db][font_size=22]🎧 Music Options[/font_size][/color][/center]\n\n"
 	
 	menu_text += "[color=#e74c3c]1.[/color] [url=option_1][color=#f1c40f]🎶 Browse Spotify Playlists[/color][/url]\n"
@@ -652,62 +652,62 @@ func show_music_options():
 	
 	menu_text += "[color=#7f8c8d]Click any option or type 1, 2, or 3[/color]"
 	
-	# 完全清除并重新显示
+	# Completely clear and redisplay
 	var dialog_label = $CanvasLayer/DialogPanel/DialogLabel
 	if dialog_label and is_instance_valid(dialog_label):
-		dialog_label.text = ""  # 确保先清空
+		dialog_label.text = ""  # Ensure first clear
 	
-	# 显示介绍文本加菜单
+	# Display introduction text with menu
 	display_text_with_rich_text("🎵 I can help you find some music to enhance your study session!\n\n" + menu_text)
 	
-	# 切换到说话动画
+	# Switch to speaking animation
 	await get_tree().create_timer(1.0).timeout
 	change_animation(AnimState.TALKING)
 	
-	# 显示输入容器
+	# Show input container
 	await get_tree().create_timer(0.5).timeout
 	var input_container = $CanvasLayer/DialogPanel/InputContainer
 	input_container.visible = true
 	
-	# 清空并聚焦输入框
+	# Clear and focus input box
 	var input_box = $CanvasLayer/DialogPanel/InputContainer/InputBox
 	input_box.text = ""
 	input_box.grab_focus()
 	
-	# 设置标志
+	# Set flag
 	music_option_selection_pending = true
 	user_input_mode = true
 
-# 生成自定义播放列表
+# Generate custom playlist
 func generate_custom_playlist(keywords):
 	print("Generating custom playlist with keywords: ", keywords)
 	
-	# 检查是否是返回命令
+	# Check if it's a return command
 	if keywords.to_lower().strip_edges() == "back":
 		print("User requested to go back to music menu")
 		custom_playlist_mode = false
 		show_music_options()
 		return
 	
-	# 设置模式标志
-	custom_playlist_mode = false  # 生成完成后退出playlist模式
+	# Set mode flag
+	custom_playlist_mode = false  # Exit playlist mode after generation
 	is_showing_music = true
 	user_input_mode = false
 	
-	# 先清除当前显示的所有文本
+	# First clear any existing text being displayed
 	current_display_text = ""
 	full_text_to_display = ""
 	
-	# 显示初始生成消息
+	# Display initial generation message
 	display_text_with_typing_effect("🎵 Starting to analyze your music preferences: \"" + keywords + "\"...")
 	
-	# 切换到思考动画
+	# Switch to thinking animation
 	change_animation(AnimState.THINKING)
 	
-	# 等待打字效果完成
+	# Wait for typing effect to complete
 	await get_tree().create_timer(1.0).timeout
 	
-	# 显示AI生成过程
+	# Display AI generation process
 	var generation_steps = [
 		"🔍 Analyzing keyword characteristics...",
 		"🧠 Matching music style database...",
@@ -716,12 +716,12 @@ func generate_custom_playlist(keywords):
 		"📊 Calculating optimal track combinations..."
 	]
 	
-	# 显示生成过程的每一步
+	# Display each step of the generation process
 	for step in generation_steps:
 		display_text_with_typing_effect(step)
 		await get_tree().create_timer(randf_range(0.5, 1.2)).timeout
 	
-	# 显示生成中状态
+	# Display generation status
 	display_text_with_typing_effect("🚀 Generation progress: 0%")
 	await get_tree().create_timer(0.7).timeout
 	display_text_with_typing_effect("🚀 Generation progress: 25%")
@@ -733,14 +733,14 @@ func generate_custom_playlist(keywords):
 	display_text_with_typing_effect("🚀 Generation progress: 100%")
 	await get_tree().create_timer(0.5).timeout
 	
-	# 获取播放列表URL和标题 - 基于关键词匹配
+	# Get playlist URL and title - based on keyword match
 	var playlist_url = ""
 	var playlist_title = ""
 	var playlist_description = ""
 	var playlist_tracks = []
 	var lower_keywords = keywords.to_lower().strip_edges()
 	
-	# 为不同关键词创建不同的"生成"播放列表
+	# Create "generated" playlists for different keywords
 	if "focus" in lower_keywords and "jazz" in lower_keywords:
 		playlist_url = "https://open.spotify.com/playlist/6KwnuHhfXRWyAaW42Qe0bD"
 		playlist_title = "Jazz Focus Vibes"
@@ -766,25 +766,25 @@ func generate_custom_playlist(keywords):
 		]
 	
 	else:
-		# 创建一个基于关键词的"定制"播放列表
+		# Create a "custom" playlist based on keywords
 		playlist_url = "https://open.spotify.com/playlist/37i9dQZF1DWWQRwui0ExPn"
 		
-		# 动态创建播放列表标题
+		# Dynamically create playlist title
 		var title_parts = []
 		var keywords_array = lower_keywords.split(" ")
 		for word in keywords_array:
-			if word.length() > 3:  # 只使用较长的词
+			if word.length() > 3:  # Only use longer words
 				title_parts.append(word.capitalize())
 		
 		if title_parts.size() > 0:
 			playlist_title = " ".join(title_parts) + " Flow"
 		else:
 			playlist_title = "Personalized Focus Mix"
-			title_parts = ["Focus"] # 添加默认值防止后面出错
+			title_parts = ["Focus"] # Add default value to prevent issues later
 		
 		playlist_description = "Custom playlist based on your keywords \"" + keywords + "\""
 		
-		# 随机生成一些看起来与关键词相关的曲目
+		# Generate some tracks that seem related to the keywords
 		var track_templates = [
 			"Deep NAME_PLACEHOLDER - Focus Artist",
 			"NAME_PLACEHOLDER Rhythm - Study Master",
@@ -797,85 +797,85 @@ func generate_custom_playlist(keywords):
 			var track_name = template.replace("NAME_PLACEHOLDER", title_parts[randi() % title_parts.size()])
 			playlist_tracks.append(track_name)
 	
-	# 切换到开心动画
+	# Switch to happy animation
 	change_animation(AnimState.HAPPY)
 	
-	# 显示"发现中"的消息
+	# Display "discovery" message
 	display_text_with_typing_effect("✨ Perfect match found! Integrating playlist...")
 	
-	# 等待短暂时间以提升期待感
+	# Wait for a short time to build anticipation
 	await get_tree().create_timer(1.0).timeout
 	
-	# 确保对话框可见
+	# Ensure dialog box is visible
 	$CanvasLayer/DialogPanel.visible = true
 	
-	# 完全清除并重新显示
+	# Completely clear and redisplay
 	var dialog_label = $CanvasLayer/DialogPanel/DialogLabel
 	if dialog_label and is_instance_valid(dialog_label):
-		dialog_label.text = ""  # 确保先清空
+		dialog_label.text = ""  # Ensure first clear
 		dialog_label.clear()
 	
-	# 创建更精美的结果展示
+	# Create more beautiful result display
 	var header = "[center][color=#3498db][font_size=24]🎵 Your Custom Generated Playlist![/font_size][/color][/center]\n\n"
 	
 	var content = "[center][b][color=#e67e22][font_size=22]" + playlist_title + "[/font_size][/color][/b][/center]\n"
 	content += "[center][i][color=#7f8c8d]" + playlist_description + "[/color][/i][/center]\n\n"
 	
-	# 添加曲目列表
+	# Add track list
 	content += "[color=#2ecc71][font_size=18]Featured Tracks:[/font_size][/color]\n"
 	for i in range(min(5, playlist_tracks.size())):
 		content += "[color=#3498db]" + str(i+1) + ".[/color] " + playlist_tracks[i] + "\n"
 	content += "\n"
 	
-	# 创建更大更明显的按钮样式链接
+	# Create larger and more obvious button style link
 	content += "[center][url=" + playlist_url + "][color=#2ecc71][bgcolor=#1a1a2a][font_size=20]▶️  LISTEN ON SPOTIFY  ▶️[/font_size][/bgcolor][/color][/url][/center]\n\n"
 	
-	# 显示实际链接，方便用户复制
+	# Display actual link for easy copying
 	content += "[center][color=#7f8c8d]" + playlist_url + "[/color][/center]\n\n"
 	
 	var footer = "[center][color=#e74c3c]🎧 This playlist was specially generated based on your keywords \"" + keywords + "\"[/color][/center]\n\n"
 	footer += "[center][url=music_menu][color=#3498db]🔙 Back to Music Menu[/color][/url][/center]"
 	
-	# 显示结果
+	# Display result
 	display_text_with_rich_text(header + content + footer)
 	
-	# 切换到说话动画
+	# Switch to speaking animation
 	await get_tree().create_timer(1.0).timeout
 	change_animation(AnimState.TALKING)
 	
-	# 延迟后回到对话模式
+	# Delay before returning to conversation mode
 	await get_tree().create_timer(2.0).timeout
 	change_animation(AnimState.IDLE)
 
-# 显示自定义播放列表界面
+# Show custom playlist interface
 func show_custom_playlist_interface():
-	# 设置模式标志
+	# Set mode flag
 	custom_playlist_mode = true
 	is_showing_music = true
 	user_input_mode = false
 	
-	# 显示对话框
+	# Show dialog box
 	$CanvasLayer/DialogPanel.visible = true
 	
-	# 先清除当前显示的所有文本
+	# First clear any existing text being displayed
 	current_display_text = ""
 	full_text_to_display = ""
 	
-	# 显示加载中提示，给UI更新提供时间
+	# Display loading message, giving UI time to update
 	display_text_with_typing_effect("✨ Loading AI Playlist Generator...")
 	
-	# 播放思考动画
+	# Play thinking animation
 	change_animation(AnimState.THINKING)
 	
-	# 等待短暂时间以确保UI更新
+	# Wait for a short time to ensure UI updates
 	await get_tree().create_timer(0.5).timeout
 	
-	# 构建简化的关键词建议文本
+	# Build simplified keyword suggestion text
 	var header = "[center][color=#3498db][font_size=22]🎮 AI Playlist Generator[/font_size][/color][/center]\n\n"
 	var intro = "[color=#2ecc71]✨ Enter keywords or mood, and I'll generate the perfect study playlist for you:[/color]\n\n"
 	var examples_section = "[color=#f1c40f]💡 Try these examples:[/color]\n"
 	
-	# 添加示例提示
+	# Add example prompts
 	examples_section += "[color=#e74c3c]•[/color] [b]focus jazz[/b] - Jazz music, perfect for enhancing focus\n"
 	examples_section += "[color=#e74c3c]•[/color] [b]ninja vibe for final week[/b] - Dynamic rhythms for finals week\n"
 	examples_section += "[color=#e74c3c]•[/color] [b]chill lofi[/b] - Relaxing Lo-Fi to help you study\n"
@@ -888,61 +888,61 @@ func show_custom_playlist_interface():
 	var footer = "\n[color=#7f8c8d]💭 Enter any keywords you want, and AI will create a perfectly matched playlist for you![/color]\n\n"
 	footer += "[url=back][color=#3498db]🔙 Back to Music Menu[/color][/url]"
 	
-	# 完全清除并重新显示
+	# Completely clear and redisplay
 	var dialog_label = $CanvasLayer/DialogPanel/DialogLabel
 	if dialog_label and is_instance_valid(dialog_label):
-		dialog_label.text = ""  # 确保先清空
+		dialog_label.text = ""  # Ensure first clear
 	
-	# 显示建议列表
+	# Display suggestion list
 	display_text_with_rich_text(header + intro + examples_section + suggestion + footer)
 	
-	# 切换到说话动画
+	# Switch to speaking animation
 	change_animation(AnimState.TALKING)
 	
-	# 等待动画效果完成
+	# Wait for animation effect to complete
 	await get_tree().create_timer(1.0).timeout
 	
-	# 显示输入容器
+	# Show input container
 	var input_container = $CanvasLayer/DialogPanel/InputContainer
 	input_container.visible = true
 	
-	# 清空并聚焦输入框
+	# Clear and focus input box
 	var input_box = $CanvasLayer/DialogPanel/InputContainer/InputBox
 	input_box.text = ""
 	input_box.grab_focus()
 	
-	# 设置用户输入模式，但维持自定义播放列表模式
+	# Set user input mode, but maintain custom playlist mode
 	user_input_mode = true
 	custom_playlist_mode = true
 
-# 显示音乐歌单
+# Show music playlists
 func show_music_playlists():
 	is_showing_music = true
 	user_input_mode = false
 	
-	# 先清除当前显示的所有文本
+	# First clear any existing text being displayed
 	current_display_text = ""
 	full_text_to_display = ""
 	
-	# 显示对话框
+	# Show dialog box
 	$CanvasLayer/DialogPanel.visible = true
 	
-	# 显示加载中提示
+	# Display loading message
 	display_text_with_typing_effect("🔍 Finding the perfect study music for you...")
 	
-	# 播放开心动画
+	# Play happy animation
 	change_animation(AnimState.HAPPY)
 	
-	# 等待动画和打字效果
+	# Wait for animation and typing effect
 	await get_tree().create_timer(1.5).timeout
 	
-	# 切换到说话动画
+	# Switch to speaking animation
 	change_animation(AnimState.TALKING)
 	
-	# 等待短暂时间以确保UI更新
+	# Wait for a short time to ensure UI updates
 	await get_tree().create_timer(0.5).timeout
 	
-	# 构建简化的歌单列表文本
+	# Build simplified playlist text
 	var header = "[center][color=#3498db][font_size=22]🎵 Focus Playlists[/font_size][/color][/center]\n"
 	header += "[color=#7f8c8d]Click any playlist to open in Spotify[/color]\n\n"
 	
@@ -955,100 +955,100 @@ func show_music_playlists():
 	
 	var footer = "[url=music_menu][color=#3498db]🔙 Back to Music Menu[/color][/url]"
 	
-	# 完全清除并重新显示
+	# Completely clear and redisplay
 	var dialog_label = $CanvasLayer/DialogPanel/DialogLabel
 	if dialog_label and is_instance_valid(dialog_label):
-		dialog_label.text = ""  # 确保先清空
+		dialog_label.text = ""  # Ensure first clear
 	
-	# 显示歌单列表
+	# Display playlist list
 	display_text_with_rich_text(header + content + footer)
 	
-	# 延迟后回到对话模式
+	# Delay before returning to conversation mode
 	await get_tree().create_timer(1.0).timeout
 	change_animation(AnimState.IDLE)
 
-# 显示课程列表
+# Show course list
 func show_course_selection():
 	is_showing_music = false
 	user_input_mode = true
 	
-	# 先清除当前显示的所有文本
+	# First clear any existing text being displayed
 	current_display_text = ""
 	full_text_to_display = ""
 	
-	# 显示对话框
+	# Show dialog box
 	$CanvasLayer/DialogPanel.visible = true
 	
-	# 构建课程列表文本
+	# Build course list text
 	var course_text = "📚 Available Courses:\n\n"
 	for i in range(courses.size()):
 		course_text += str(i + 1) + ". " + courses[i] + "\n"
 	
 	course_text += "\n✍️ Please enter the course number (1-" + str(courses.size()) + ") to view study plan..."
 	
-	# 显示课程列表
+	# Display course list
 	display_text_with_typing_effect(course_text)
 	
-	# 显示输入容器
+	# Show input container
 	var input_container = $CanvasLayer/DialogPanel/InputContainer
 	input_container.visible = true
 	
-	# 清空并聚焦输入框
+	# Clear and focus input box
 	var input_box = $CanvasLayer/DialogPanel/InputContainer/InputBox
 	input_box.text = ""
 	input_box.grab_focus()
 
-# 显示学习计划
+# Show study plan
 func show_study_plan():
 	is_showing_music = false
 	user_input_mode = false
 	
-	# 先清除当前显示的所有文本
+	# First clear any existing text being displayed
 	current_display_text = ""
 	full_text_to_display = ""
 	
-	# 播放思考动画
+	# Play thinking animation
 	change_animation(AnimState.THINKING)
 	
-	# 显示介绍文本
+	# Display introduction text
 	$CanvasLayer/DialogPanel.visible = true
 	display_text_with_typing_effect("🧠 Analyzing your exam needs and creating a 48-hour study plan...")
 	
-	# 等待打字效果完成
+	# Wait for typing effect to complete
 	await get_tree().create_timer(3).timeout
 	
-	# 切换到开心动画
+	# Switch to happy animation
 	change_animation(AnimState.HAPPY)
 	
-	# 获取对话标签并设置滚动
+	# Get dialog label and set scrolling
 	var dialog_label = $CanvasLayer/DialogPanel/DialogLabel
 	if dialog_label and is_instance_valid(dialog_label):
-		# 确保是 RichTextLabel
+		# Ensure it's RichTextLabel
 		if dialog_label is RichTextLabel:
-			dialog_label.scroll_active = true  # 启用滚动
-			dialog_label.scroll_following = true  # 自动跟随文本
-			dialog_label.scroll_to_line(0)  # 确保从顶部开始
-			dialog_label.custom_minimum_size = Vector2(610, 450)  # 设置最小尺寸
-			dialog_label.size = Vector2(610, 450)  # 设置固定尺寸
-			dialog_label.fit_content = false  # 禁用自适应内容
+			dialog_label.scroll_active = true  # Enable scrolling
+			dialog_label.scroll_following = true  # Auto-scroll text
+			dialog_label.scroll_to_line(0)  # Ensure starting from top
+			dialog_label.custom_minimum_size = Vector2(610, 450)  # Set minimum size
+			dialog_label.size = Vector2(610, 450)  # Set fixed size
+			dialog_label.fit_content = false  # Disable content adaptation
 			
-			# 滚动条设置
-			dialog_label.scroll_horizontal_enabled = false  # 禁用水平滚动
-			dialog_label.scroll_vertical_enabled = true  # 启用垂直滚动
-			dialog_label.scroll_vertical = 0  # 初始滚动位置
-			dialog_label.scroll_following_smoothing = 3  # 滚动平滑度
-			dialog_label.scroll_vertical_custom_step = 30  # 自定义滚动步长
+			# Scrollbar settings
+			dialog_label.scroll_horizontal_enabled = false  # Disable horizontal scrolling
+			dialog_label.scroll_vertical_enabled = true  # Enable vertical scrolling
+			dialog_label.scroll_vertical = 0  # Initial scroll position
+			dialog_label.scroll_following_smoothing = 3  # Scroll smoothness
+			dialog_label.scroll_vertical_custom_step = 30  # Custom scroll step
 			
-			# 滚动条样式（可选）
+			# Scrollbar style (optional)
 			var style = StyleBoxFlat.new()
-			style.bg_color = Color(0.2, 0.2, 0.2, 0.6)  # 滚动条背景色
+			style.bg_color = Color(0.2, 0.2, 0.2, 0.6)  # Scrollbar background color
 			style.corner_radius_top_left = 3
 			style.corner_radius_top_right = 3
 			style.corner_radius_bottom_left = 3
 			style.corner_radius_bottom_right = 3
 			dialog_label.add_theme_stylebox_override("scroll", style)
 
-	# 显示计划文本
+	# Display plan text
 	var plan_text = "📚 FIT9136 Week 1 Summary\n\n"
 	
 	plan_text += "📋 Course Overview:\n"
@@ -1075,7 +1075,7 @@ func show_study_plan():
 	
 	plan_text += "🕒 T-24 to T-12 Hours: Advanced Topics & Edge Cases (12 hours total)\n"
 	plan_text += "• 6 Hours: Tackle complex problems (recursion, file handling, multi-threading if relevant).\n"
-	plan_text += "• 3 Hours: Practice writing clean, efficient code—pretend you’re coding in an interview.\n"
+	plan_text += "• 3 Hours: Practice writing clean, efficient code—pretend you're coding in an interview.\n"
 	plan_text += "• 3 Hours: Review common pitfalls and tricky syntax issues.\n"
 	plan_text += "• 🔥 Ninja Tip: Write & run mini-experiments to test edge cases.\n\n"
 
@@ -1090,38 +1090,38 @@ func show_study_plan():
 	
 	display_text_with_typing_effect(plan_text)
 	
-	# 切换到说话动画
+	# Switch to speaking animation
 	await get_tree().create_timer(1.0).timeout
 	change_animation(AnimState.TALKING)
 	
-	# 设置学习开始时间
+	# Set study start time
 	study_time_start = Time.get_unix_time_from_system()
 	
-	# 延迟后回到对话模式
+	# Delay before returning to conversation mode
 	await get_tree().create_timer(7.0).timeout
 	change_animation(AnimState.IDLE)
 	show_user_input()
 
-# 显示练习测试
+# Show practice test
 func show_practice_test():
 	is_showing_music = false
 	user_input_mode = false
 	
-	# 先清除当前显示的所有文本
+	# First clear any existing text being displayed
 	current_display_text = ""
 	full_text_to_display = ""
 	
-	# 播放思考动画
+	# Play thinking animation
 	change_animation(AnimState.THINKING)
 	
-	# 显示介绍文本
+	# Display introduction text
 	$CanvasLayer/DialogPanel.visible = true
 	display_text_with_typing_effect("🧪 Let's test your knowledge to identify areas we need to focus on...")
 	
-	# 等待打字效果完成
+	# Wait for typing effect to complete
 	await get_tree().create_timer(2.0).timeout
 	
-	# 构建测试问题
+	# Build test questions
 	var test_text = "📝 Quick Test - Algorithm Fundamentals:\n\n"
 	test_text += "1️⃣ Which of the following variable declarations is invalid?\n"
 	test_text += "   a) my_var = 10\n"
@@ -1140,62 +1140,62 @@ func show_practice_test():
 	
 	test_text += "✍️ Type your answers as '1b 2a 3c' format."
 	
-	# 切换到说话动画
+	# Switch to speaking animation
 	change_animation(AnimState.TALKING)
 	display_text_with_typing_effect(test_text)
 	
-	# 等待打字效果完成
+	# Wait for typing effect to complete
 	await get_tree().create_timer(3.0).timeout
 	
-	# 显示输入容器，但保留测试文本
+	# Show input container, but keep test text
 	var input_container = $CanvasLayer/DialogPanel/InputContainer
 	input_container.visible = true
 	
-	# 清空并聚焦输入框
+	# Clear and focus input box
 	var input_box = $CanvasLayer/DialogPanel/InputContainer/InputBox
 	input_box.text = ""
 	input_box.grab_focus()
 	
-	# 设置用户输入模式
+	# Set user input mode
 	user_input_mode = true
 
-# 显示健康提示
+# Show health tip
 func show_health_tip():
 	is_showing_music = false
 	user_input_mode = false
 	
-	# 播放开心动画
+	# Play happy animation
 	change_animation(AnimState.HAPPY)
 	
-	# 显示健康提示
+	# Display health tip
 	$CanvasLayer/DialogPanel.visible = true
 	
-	# 随机选择一条健康提示
+	# Randomly select a health tip
 	var tip = health_reminders[randi() % health_reminders.size()]
 	display_text_with_typing_effect(tip + "\n\n(Type your next question or command...)")
 	
-	# 切换到说话动画
+	# Switch to speaking animation
 	await get_tree().create_timer(1.5).timeout
 	change_animation(AnimState.TALKING)
 	
-	# 延迟后回到对话模式
+	# Delay before returning to conversation mode
 	await get_tree().create_timer(3.0).timeout
 	change_animation(AnimState.IDLE)
 	show_user_input()
 
-# 显示健康提醒弹窗
+# Show health reminder popup
 func show_health_reminder():
-	# 只有在不显示其他内容时才显示健康提醒
+	# Only show health reminder if no other content is being displayed
 	if not is_typing_text and not is_showing_music and not user_input_mode:
-		# 显示健康提示
+		# Show health tip
 		show_health_tip()
 
-# 处理测试回答
+# Process test answers
 func process_test_answer(answer):
 	var correct_answers = "1b 2c 3b"
 	var score = 0
 	
-	# 简单比较答案
+	# Simple comparison of answers
 	var user_answers = answer.to_lower().strip_edges()
 	var answers_array = user_answers.split(" ")
 	var correct_array = correct_answers.split(" ")
@@ -1204,7 +1204,7 @@ func process_test_answer(answer):
 		if answers_array[i] == correct_array[i]:
 			score += 1
 	
-	# 显示结果
+	# Display result
 	var result_text = "You scored " + str(score) + " out of 3.\n\n"
 	
 	if score == 3:
@@ -1217,7 +1217,7 @@ func process_test_answer(answer):
 		result_text += "We've identified some areas to work on. Let's focus on these topics!"
 		change_animation(AnimState.THINKING)
 	
-	# 显示正确答案
+	# Display correct answers
 	result_text += "\n\nCorrect answers:\n"
 	result_text += "1. b) O(n²)\n"
 	result_text += "2. c) Optimal substructure\n"
@@ -1227,70 +1227,70 @@ func process_test_answer(answer):
 	
 	display_text_with_typing_effect(result_text)
 	
-	# 延迟后继续
+	# Delay before continuing
 	await get_tree().create_timer(3.0).timeout
 	
-	# 显示输入容器，但保留测试结果文本
+	# Show input container, but keep test result text
 	var input_container = $CanvasLayer/DialogPanel/InputContainer
 	input_container.visible = true
 	
-	# 清空并聚焦输入框
+	# Clear and focus input box
 	var input_box = $CanvasLayer/DialogPanel/InputContainer/InputBox
 	input_box.text = ""
 	input_box.grab_focus()
 	
-	# 设置用户输入模式
+	# Set user input mode
 	user_input_mode = true
 	
-	# 延迟后回到对话模式
+	# Delay before returning to conversation mode
 	await get_tree().create_timer(0.5).timeout
 	show_user_input()
 
-# 点击桌宠时触发
+# Trigger when clicking on the pet
 func _on_click_area_input_event(viewport, event, shape_idx):
 	if event is InputEventMouseButton and event.pressed:
 		print("ClickArea signal triggered: Ninja cat clicked!")
 		show_next_dialogue()
 		return
 
-# 处理用户输入文本框的回车事件
+# Handle user input text box submission
 func _on_input_box_text_submitted(new_text):
-	_on_send_button_pressed()  # 复用按钮的处理逻辑
+	_on_send_button_pressed()  # Reuse button processing logic
 
-# 处理用户输入的消息
+# Handle user input messages
 func process_user_input(message):
-	# 记录用户问题到对话历史
+	# Record user question to conversation history
 	conversation_history.append({"role": "user", "content": message})
 	
-	# 检查是否是测试答案
+	# Check if it's a test answer
 	if is_showing_music:
 		return
 	
-	# 保存当前显示的文本，以便保持对话连续性
+	# Save current displayed text to maintain continuity of conversation
 	var current_text = current_display_text
 	
-	# 如果当前文本已经包含"User:"，我们需要添加到现有对话中
-	# 否则，只显示用户问题
+	# If current text already contains "User:", we need to add it to the existing conversation
+	# Otherwise, just display the user question
 	if "User:" in current_text:
 		display_text_with_typing_effect(current_text + "\n\nUser: " + message)
 	else:
 		display_text_with_typing_effect("User: " + message)
 	
-	# 切换到说话动画表示收到问题
+	# Switch to speaking animation to indicate receiving a question
 	change_animation(AnimState.TALKING)
 	
-	# 延迟一段时间
+	# Wait for a short time
 	await get_tree().create_timer(1.0).timeout
 	
-	# 显示AI思考过程
+	# Display AI thinking process
 	show_ai_thinking_process(message)
 
-# 显示AI思考过程
+# Display AI thinking process
 func show_ai_thinking_process(message):
-	# 切换到思考动画
+	# Switch to thinking animation
 	change_animation(AnimState.THINKING)
 	
-	# 随机选择三个思考短语显示
+	# Randomly select three thinking phrases to display
 	var selected_phrases = []
 	var available_phrases = thinking_phrases.duplicate()
 	for i in range(min(3, thinking_phrases.size())):
@@ -1298,10 +1298,10 @@ func show_ai_thinking_process(message):
 		selected_phrases.append(available_phrases[index])
 		available_phrases.remove_at(index)
 	
-	# 保存当前显示的文本，以便保持对话连续性
+	# Save current displayed text to maintain continuity of conversation
 	var current_text = current_display_text
 	
-	# 显示思考过程，保持用户问题可见
+	# Display thinking process, keeping user question visible
 	for phrase in selected_phrases:
 		var thinking_text = current_text
 		if not thinking_text.ends_with("\n\n"):
@@ -1310,35 +1310,35 @@ func show_ai_thinking_process(message):
 		display_text_with_typing_effect(thinking_text)
 		await get_tree().create_timer(0.8).timeout
 	
-	# 调用Gemini API获取回复
+	# Call Gemini API to get a response
 	call_gemini_api(message)
 
-# 调用Gemini API
+# Call Gemini API
 func call_gemini_api(message):
-	# 检查API密钥
+	# Check API key
 	if api_key.strip_edges().is_empty():
 		print("API key is empty, using fallback response")
 		use_fallback_response(message)
 		return
 	
-	# 添加API测试检查
+	# Add API test check
 	print("Testing API access with key: " + api_key.substr(0, 5) + "...")
 
-	# 创建HTTP请求
+	# Create HTTP request
 	var http_request = HTTPRequest.new()
 	add_child(http_request)
 	http_request.connect("request_completed", _on_gemini_response_received)
 	
-	# 构建请求URL (包含API密钥)
+	# Build request URL (including API key)
 	var url = GEMINI_API_URL + "?key=" + api_key
 	
-	# 准备请求头
+	# Prepare request headers
 	var headers = ["Content-Type: application/json"]
 	
-	# 增强提示语，让响应更像Final Ninja
+	# Enhance prompt to make response more like Final Ninja
 	var system_prompt = "You are Final Ninja, a quirky pixel-art ninja character who helps students prepare for exams. Your mission is to help defeat the 'Final Monster' (exam stress) with efficient study strategies. Be encouraging, slightly humorous, and give concise, practical advice. Keep responses under 3 paragraphs. Focus on effective study techniques, time management, and mental well-being."
 	
-	# 构建请求体
+	# Build request body
 	var body = {
 		"contents": [
 			{
@@ -1357,20 +1357,20 @@ func call_gemini_api(message):
 		}
 	}
 	
-	# 添加调试信息
+	# Add debug information
 	print("Sending API request to: " + GEMINI_API_URL)
 	print("Request body: " + JSON.stringify(body))
 	
-	# 发送请求
+	# Send request
 	var error = http_request.request(url, headers, HTTPClient.METHOD_POST, JSON.stringify(body))
 	if error != OK:
 		print("Error making HTTP request: ", error)
-		# 出错时显示危险动画
+		# Show danger animation if there's an error
 		change_animation(AnimState.DANGER)
 		await get_tree().create_timer(1.0).timeout
 		use_fallback_response("")
 
-# 处理Gemini API响应
+# Handle Gemini API response
 func _on_gemini_response_received(result, response_code, headers, body):
 	var response_node = get_node_or_null("HTTPRequest")
 	if response_node:
@@ -1380,15 +1380,15 @@ func _on_gemini_response_received(result, response_code, headers, body):
 	
 	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
 		print("Error in API response: ", response_code)
-		# 打印响应体，帮助诊断
+		# Print response body for diagnostic purposes
 		print("Response body: ", body.get_string_from_utf8())
-		# API错误时显示危险动画
+		# Show danger animation if there's an error
 		change_animation(AnimState.DANGER)
 		await get_tree().create_timer(1.0).timeout
 		use_fallback_response("")
 		return
 	
-	# 解析响应
+	# Parse response
 	var json = JSON.new()
 	var parse_result = json.parse(body.get_string_from_utf8())
 	if parse_result != OK:
@@ -1400,7 +1400,7 @@ func _on_gemini_response_received(result, response_code, headers, body):
 	var response_data = json.get_data()
 	print("Received valid response: ", JSON.stringify(response_data))
 	
-	# 从响应中提取文本 (根据Gemini API的响应结构调整)
+	# Extract text from response (based on Gemini API response structure)
 	var ai_message = ""
 	if response_data.has("candidates") and response_data["candidates"].size() > 0:
 		if response_data["candidates"][0].has("content") and response_data["candidates"][0]["content"].has("parts"):
@@ -1413,18 +1413,18 @@ func _on_gemini_response_received(result, response_code, headers, body):
 		use_fallback_response("")
 		return
 	
-	# 获取最后一个用户消息
+	# Get last user message
 	var last_user_message = ""
 	if conversation_history.size() > 0:
 		last_user_message = conversation_history[conversation_history.size() - 1].content
 	
-	# 添加API回复到对话历史
+	# Add API response to conversation history
 	conversation_history.append({"role": "assistant", "content": ai_message})
 	
-	# 切换到开心动画
+	# Switch to happy animation
 	change_animation(AnimState.HAPPY)
 	
-	# 显示回复文本 - 同时显示用户问题和AI回答
+	# Display response text - show both user question and AI answer
 	var display_text = ""
 	if not last_user_message.is_empty():
 		display_text = "User: " + last_user_message + "\n\n"
@@ -1432,22 +1432,22 @@ func _on_gemini_response_received(result, response_code, headers, body):
 	display_text += "Final Ninja: " + ai_message + "\n\n(Type your next question or command...)"
 	display_text_with_typing_effect(display_text)
 	
-	# 切换到说话动画
+	# Switch to speaking animation
 	await get_tree().create_timer(1.0).timeout
 	change_animation(AnimState.TALKING)
 	
-	# 延迟后回到对话模式
+	# Delay before returning to conversation mode
 	await get_tree().create_timer(3.0).timeout
 	change_animation(AnimState.IDLE)
 	
-	# 显示用户输入界面
+	# Show user input interface
 	show_user_input()
 
-# 使用备用回复
+# Use fallback response
 func use_fallback_response(message):
 	print("Using fallback response")
 	
-	# 随机备用回复
+	# Random fallback reply
 	var fallback_replies = [
 		"I seem to be having trouble connecting to my knowledge base. Could you try asking me in a different way?",
 		"Hmm, my ninja senses are temporarily blocked. Let's try a different question!",
@@ -1457,20 +1457,20 @@ func use_fallback_response(message):
 	
 	var fallback_message = fallback_replies[randi() % fallback_replies.size()]
 	
-	# 获取最后一个用户消息
+	# Get last user message
 	var last_user_message = ""
 	if message.strip_edges().is_empty() and conversation_history.size() > 0:
 		last_user_message = conversation_history[conversation_history.size() - 1].content
 	else:
 		last_user_message = message
 	
-	# 添加备用回复到对话历史
+	# Add fallback reply to conversation history
 	conversation_history.append({"role": "assistant", "content": fallback_message})
 	
-	# 切换到说话动画
+	# Switch to speaking animation
 	change_animation(AnimState.TALKING)
 	
-	# 显示回复文本 - 同时显示用户问题和备用回答
+	# Display response text - show both user question and fallback answer
 	var display_text = ""
 	if not last_user_message.is_empty():
 		display_text = "User: " + last_user_message + "\n\n"
@@ -1478,35 +1478,35 @@ func use_fallback_response(message):
 	display_text += "Final Ninja: " + fallback_message + "\n\n(Type your next question or command...)"
 	display_text_with_typing_effect(display_text)
 	
-	# 延迟后回到对话模式
+	# Delay before returning to conversation mode
 	await get_tree().create_timer(3.0).timeout
 	change_animation(AnimState.IDLE)
 	
-	# 显示用户输入界面
+	# Show user input interface
 	show_user_input()
 
-# 新增函数：使用富文本显示带链接的文本
+# New function: Use rich text to display text with links
 func display_text_with_rich_text(text):
-	# 停止当前的打字效果
+	# Stop current typing effect
 	is_typing_text = false
 	
-	# 获取对话标签
+	# Get dialog label
 	var dialog_label = $CanvasLayer/DialogPanel/DialogLabel
 	
-	# 如果当前标签不是RichTextLabel或无效，则创建一个新的
+	# If current label is not RichTextLabel or invalid, create a new one
 	if not dialog_label is RichTextLabel or not is_instance_valid(dialog_label):
-		# 删除旧标签（如果存在）
+		# Delete old label (if exists)
 		if dialog_label and is_instance_valid(dialog_label):
-			# 保存当前标签的属性
+			# Save current label attributes
 			var current_pos = dialog_label.position
 			var current_size = dialog_label.size
 			var current_font_size = dialog_label.get_theme_font_size("font_size")
 			dialog_label.queue_free()
 			
-			# 等待一帧确保删除完成
+			# Wait for a frame to ensure deletion is complete
 			await get_tree().process_frame
 			
-			# 创建RichTextLabel
+			# Create RichTextLabel
 			var rich_text = RichTextLabel.new()
 			rich_text.name = "DialogLabel"
 			rich_text.position = current_pos
@@ -1518,69 +1518,69 @@ func display_text_with_rich_text(text):
 			rich_text.add_theme_font_size_override("italics_font_size", current_font_size)
 			rich_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			
-			# 设置链接颜色和标签样式
-			rich_text.add_theme_color_override("default_color", Color(1, 1, 1)) # 主文本白色
+			# Set link color and label style
+			rich_text.add_theme_color_override("default_color", Color(1, 1, 1)) # Main text white
 			rich_text.add_theme_color_override("font_selected_color", Color(0.8, 0.8, 0.8))
-			rich_text.add_theme_constant_override("line_separation", 8) # 增加行间距防止重叠
+			rich_text.add_theme_constant_override("line_separation", 8) # Increase line spacing to prevent overlap
 			
-			# 连接链接点击信号
+			# Connect link click signal
 			rich_text.connect("meta_clicked", _on_link_clicked)
 			rich_text.connect("meta_hover_started", _on_link_hover_started)
 			rich_text.connect("meta_hover_ended", _on_link_hover_ended)
 			
-			# 添加到对话面板
+			# Add to dialog panel
 			$CanvasLayer/DialogPanel.add_child(rich_text)
 			dialog_label = rich_text
 		else:
-			# 如果不存在标签，创建一个新的
+			# If no label exists, create a new one
 			var rich_text = RichTextLabel.new()
 			rich_text.name = "DialogLabel"
-			rich_text.position = Vector2(10, 10) # 更新位置为10,10
-			rich_text.size = Vector2(610, 350) # 更新大小为新设置的尺寸
+			rich_text.position = Vector2(10, 10) # Update position to 10,10
+			rich_text.size = Vector2(610, 350) # Update size to new set dimensions
 			rich_text.bbcode_enabled = true
 			rich_text.meta_underlined = true
-			rich_text.add_theme_font_size_override("normal_font_size", 24) # 更新为24的字体大小
-			rich_text.add_theme_font_size_override("bold_font_size", 26) # 粗体字再大一点
-			rich_text.add_theme_font_size_override("italics_font_size", 24) # 斜体字大小
+			rich_text.add_theme_font_size_override("normal_font_size", 24) # Update to 24 font size
+			rich_text.add_theme_font_size_override("bold_font_size", 26) # Bold text slightly larger
+			rich_text.add_theme_font_size_override("italics_font_size", 24) # Italic text size
 			rich_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			
-			# 设置链接颜色和标签样式
-			rich_text.add_theme_color_override("default_color", Color(1, 1, 1)) # 主文本白色
-			rich_text.add_theme_constant_override("line_separation", 8) # 增加行间距防止重叠
+			# Set link color and label style
+			rich_text.add_theme_color_override("default_color", Color(1, 1, 1)) # Main text white
+			rich_text.add_theme_constant_override("line_separation", 8) # Increase line spacing to prevent overlap
 			
-			# 连接链接点击信号
+			# Connect link click signal
 			rich_text.connect("meta_clicked", _on_link_clicked)
 			rich_text.connect("meta_hover_started", _on_link_hover_started)
 			rich_text.connect("meta_hover_ended", _on_link_hover_ended)
 			
-			# 添加到对话面板
+			# Add to dialog panel
 			$CanvasLayer/DialogPanel.add_child(rich_text)
 			dialog_label = rich_text
 	
-	# 确保label存在
+	# Ensure label exists
 	if dialog_label and is_instance_valid(dialog_label):
-		# 强制清除所有内容
+		# Force clear all content
 		dialog_label.clear()
 		dialog_label.text = ""
 		
-		# 等待一帧确保清除完成
+		# Wait for a frame to ensure clearing is complete
 		await get_tree().process_frame
 		
-		# 设置富文本内容
+		# Set rich text content
 		dialog_label.clear()
 		dialog_label.append_text(text)
 		
-		# 更新当前显示文本
+		# Update current displayed text
 		current_display_text = text
 		full_text_to_display = text
 	else:
 		print("ERROR: Dialog label is null or invalid in display_text_with_rich_text")
 
-# 处理链接点击
+# Handle link clicks
 func _on_link_clicked(meta):
 	print("Link clicked: ", meta)
 	
-	# 处理内部导航链接
+	# Handle internal navigation links
 	if meta == "option_1":
 		show_music_playlists()
 		return
@@ -1595,7 +1595,7 @@ func _on_link_clicked(meta):
 			show_user_input()
 		return
 	elif meta == "adhd_url" or meta == "adhd_font" or meta == "adhd_focus":
-		# 显示信息表示功能正在开发中
+		# Show information about feature under development
 		var adhd_info = "This feature is currently in development...\n\n"
 		adhd_info += "[url=adhd][color=#3498db]🔙 Back to ADHD Reader Mode[/color][/url]"
 		display_text_with_rich_text(adhd_info)
@@ -1604,46 +1604,46 @@ func _on_link_clicked(meta):
 		show_adhd_reader_mode()
 		return
 	
-	# 处理外部链接 (Spotify URLs)
+	# Handle external links (Spotify URLs)
 	OS.shell_open(str(meta))
 
-# 添加链接悬停效果处理函数
+# Add link hover effect handling function
 func _on_link_hover_started(meta):
 	var dialog_label = $CanvasLayer/DialogPanel/DialogLabel
 	if dialog_label and is_instance_valid(dialog_label) and dialog_label is RichTextLabel:
-		# 添加悬停效果 - 播放微小的动画或音效
+		# Add hover effect - play small animation or sound
 		$CanvasLayer/DialogPanel/DialogLabel.add_theme_constant_override("outline_size", 1)
-		# 可以在这里添加更多悬停效果，比如播放声音
+		# You can add more hover effects here, like playing sound
 		# $AudioHover.play()
 
 func _on_link_hover_ended(meta):
 	var dialog_label = $CanvasLayer/DialogPanel/DialogLabel
 	if dialog_label and is_instance_valid(dialog_label) and dialog_label is RichTextLabel:
-		# 恢复正常状态
+		# Return to normal state
 		$CanvasLayer/DialogPanel/DialogLabel.add_theme_constant_override("outline_size", 0)
 
-# 显示ADHD阅读模式
+# Show ADHD reading mode
 func show_adhd_reader_mode():
 	is_showing_music = false
 	user_input_mode = false
 	
-	# 先清除当前显示的所有文本
+	# First clear any existing text being displayed
 	current_display_text = ""
 	full_text_to_display = ""
 	
-	# 显示对话框
+	# Show dialog box
 	$CanvasLayer/DialogPanel.visible = true
 	
-	# 显示加载中提示，给UI更新提供时间
+	# Display loading message, giving UI time to update
 	display_text_with_typing_effect("📱 Loading ADHD Reader Mode...")
 	
-	# 播放开心动画
+	# Play happy animation
 	change_animation(AnimState.HAPPY)
 	
-	# 等待短暂时间以确保UI更新
+	# Wait for a short time to ensure UI updates
 	await get_tree().create_timer(0.5).timeout
 	
-	# 创建现代菜单，避免重叠和乱码问题
+	# Create modern menu, avoiding overlap and encoding issues
 	var menu_text = "[center][color=#3498db][font_size=22]🧠 ADHD Reader Mode[/font_size][/color][/center]\n\n"
 	
 	menu_text += "[color=#e74c3c]1.[/color] [url=adhd_url][color=#f1c40f]🔗 Open URL[/color][/url]\n"
@@ -1660,53 +1660,53 @@ func show_adhd_reader_mode():
 	
 	menu_text += "[color=#7f8c8d]Click any option or type option number[/color]"
 	
-	# 完全清除并重新显示
+	# Completely clear and redisplay
 	var dialog_label = $CanvasLayer/DialogPanel/DialogLabel
 	if dialog_label and is_instance_valid(dialog_label):
-		dialog_label.text = ""  # 确保先清空
+		dialog_label.text = ""  # Ensure first empty
 	
-	# 显示介绍文本加菜单
+	# Display introduction text with menu
 	display_text_with_rich_text("📱 ADHD Reader Mode can help you read and focus more easily!\n\n" + menu_text)
 	
-	# 切换到说话动画
+	# Switch to speaking animation
 	await get_tree().create_timer(1.0).timeout
 	change_animation(AnimState.TALKING)
 	
-	# 显示输入容器
+	# Show input container
 	await get_tree().create_timer(0.5).timeout
 	var input_container = $CanvasLayer/DialogPanel/InputContainer
 	input_container.visible = true
 	
-	# 清空并聚焦输入框
+	# Clear and focus input box
 	var input_box = $CanvasLayer/DialogPanel/InputContainer/InputBox
 	input_box.text = ""
 	input_box.grab_focus()
 	
-	# 设置用户输入模式
+	# Set user input mode
 	user_input_mode = true
 
-# 显示排名
+# Show rankings
 func show_ninja_ranking():
 	is_showing_music = false
 	user_input_mode = false
 	
-	# 显示对话框
+	# Show dialog box
 	$CanvasLayer/DialogPanel.visible = true
 	
-	# 先清除当前显示的所有文本
+	# First clear any existing text being displayed
 	current_display_text = ""
 	full_text_to_display = ""
 	
-	# 显示加载中提示
+	# Display loading message
 	display_text_with_typing_effect("🥷 Loading Ninja Community Rankings...")
 	
-	# 播放思考动画
+	# Play thinking animation
 	change_animation(AnimState.THINKING)
 	
-	# 等待短暂时间以确保UI更新
+	# Wait for a short time to ensure UI updates
 	await get_tree().create_timer(1.0).timeout
 	
-	# 创建排名内容
+	# Create ranking content
 	var rankings_text = "🏆 Ninja Community Rankings\n\n"
 	rankings_text += "1. 🐯 Tiger Ninja - Level 12\n"
 	rankings_text += "   Study Time: 51 hours | Status: Ultimate Focus\n\n"
@@ -1735,27 +1735,27 @@ func show_ninja_ranking():
 	rankings_text += "Keep studying to increase your level and reach the top of the rankings!\n\n"
 	rankings_text += "(Type 'back' to return to main menu)"
 	
-	# 显示排名文本
+	# Display ranking text
 	display_text_with_typing_effect(rankings_text)
 	
-	# 切换到说话动画
+	# Switch to speaking animation
 	await get_tree().create_timer(1.0).timeout
 	change_animation(AnimState.TALKING)
 	
-	# 延迟后回到空闲状态
+	# Delay before returning to idle state
 	await get_tree().create_timer(3.0).timeout
 	change_animation(AnimState.IDLE)
 	
-	# 显示输入容器
+	# Show input container
 	var input_container = $CanvasLayer/DialogPanel/InputContainer
 	input_container.visible = true
 	
-	# 清空并聚焦输入框
+	# Clear and focus input box
 	var input_box = $CanvasLayer/DialogPanel/InputContainer/InputBox
 	input_box.text = ""
 	input_box.grab_focus()
 	
-	# 设置用户输入模式
+	# Set user input mode
 	user_input_mode = true
 
 var dragging = false
@@ -1763,30 +1763,30 @@ var drag_start_position = Vector2()
 var window_start_position = Vector2i()
 
 func _input(event):
-	# 处理键盘输入
+	# Handle keyboard input
 	if event is InputEventKey and event.pressed:
 		var window = get_window()
 		var current_position = window.position
 		var new_position = current_position
 		
-		# 检测方向键输入
+		# Detect direction key input
 		match event.keycode:
 			KEY_UP:
-				new_position.y -= window_move_speed # 向上移动
+				new_position.y -= window_move_speed # Move up
 			KEY_DOWN:
-				new_position.y += window_move_speed # 向下移动
+				new_position.y += window_move_speed # Move down
 			KEY_LEFT:
-				new_position.x -= window_move_speed # 向左移动
+				new_position.x -= window_move_speed # Move left
 			KEY_RIGHT:
-				new_position.x += window_move_speed # 向右移动
+				new_position.x += window_move_speed # Move right
 		
-		# 应用新位置
+		# Apply new position
 		if new_position != current_position:
 			window.position = new_position
 	
-	# 处理鼠标点击事件
+	# Handle mouse click events
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		# 检查点击位置是否在精灵上
+		# Check if click position is on the sprite
 		var sprite = $Sprite2D
 		var sprite_pos = sprite.global_position
 		var sprite_size = sprite.texture.get_size() * sprite.scale
@@ -1797,33 +1797,33 @@ func _input(event):
 		var top = sprite_pos.y - sprite_size.y/2
 		var bottom = sprite_pos.y + sprite_size.y/2
 		
-		# 点击忍者猫时显示对话
+		# Show dialogue when ninja cat is clicked
 		if mouse_pos.x > left and mouse_pos.x < right and mouse_pos.y > top and mouse_pos.y < bottom:
 			print("Click detected on ninja sprite")
 			show_next_dialogue()
 			return
 		
-		# 检查点击是否在对话框上
+		# Check if click is on the dialog box
 		var dialog_panel = $CanvasLayer/DialogPanel
 		if dialog_panel and dialog_panel.visible:
 			var dialog_rect = Rect2(dialog_panel.global_position, dialog_panel.size)
 			
-			# 如果点击在对话框上（排除输入框区域）
+			# If click is on the dialog box (excluding input box area)
 			if dialog_rect.has_point(mouse_pos):
 				var input_container = $CanvasLayer/DialogPanel/InputContainer
 				var input_rect = Rect2()
 				
-				# 检查是否点击在输入框区域
+				# Check if click is in input box area
 				if input_container and input_container.visible:
 					input_rect = Rect2(input_container.global_position, input_container.size)
 				
-				# 如果点击不在输入框区域，则触发对话继续
+				# If click is not in input box area, trigger dialogue continuation
 				if not input_rect.has_point(mouse_pos) and not is_typing_text:
 					print("Click detected on dialog panel")
 					if user_input_mode:
-						# 如果处于用户输入模式，点击对话框没有效果
+						# If in user input mode, clicking the dialog box has no effect
 						pass
 					else:
-						# 如果不是在打字效果中，继续下一条对话或显示输入界面
+						# If not in typing effect, continue to next dialogue or show input interface
 						show_next_dialogue()
 						return
