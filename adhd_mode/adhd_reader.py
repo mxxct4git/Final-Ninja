@@ -88,46 +88,46 @@ class ADHDReader(QMainWindow):
             return
 
         bionic_style_script = """
-        // 注入基础样式
+        // Injecting base styles
         const style = document.createElement('style');
         style.innerHTML = `
             body {
                 background-color: #f0eee6 !important;
                 color: #333333 !important;
-                line-height: 2.0 !important; /* 增大行间距 */
+                line-height: 2.0 !important; /* Increase line spacing */
                 font-family: Georgia, serif !important;
             }
-             /* 强制应用背景色到所有元素 */
+             /* Force a background color to all elements */
              html, body, div, article, section, main, .content, .container, .wrapper {
                  background-color: #f0eee6 !important;
              }
              
-             /* 移除可能的背景图片 */
+             /* Remove possible background images */
              body, div, article, section, main {
                  background-image: none !important;
              }
-            /* 仿生阅读加粗样式 - 只加粗不改变其他 */
+            /* Bionic Reading Bold Style - Only bold without changing other things */
             .bionic-bold {
                 font-weight: 700 !important;
             }
         `;
         document.head.appendChild(style);
 
-        // 简化版本的仿生阅读实现 - 只加粗文本的前几个字母，不改变布局
+        // A simplified version of the Bionic Reader implementation - only the first few letters of the text are bolded, without changing the layout
         function applyBionicReading() {
-            // 遍历所有文本节点并替换内容
+            // Iterate over all text nodes and replace the content
             function walkTextNodes(node) {
                 if (node.nodeType === Node.TEXT_NODE && node.nodeValue.trim().length > 0) {
-                    // 跳过已经处理过的节点
+                    // Skip nodes that have already been processed
                     if (node.parentNode.classList && node.parentNode.classList.contains('bionic-processed')) {
                         return;
                     }
                     
-                    // 创建一个包含处理后文本的容器
+                    // Create a container to contain the processed text
                     const container = document.createElement('span');
                     container.classList.add('bionic-processed');
                     
-                    // 处理文本中的每个单词
+                    // Process each word in the text
                     const text = node.nodeValue;
                     let result = '';
                     let inWord = false;
@@ -135,64 +135,64 @@ class ADHDReader(QMainWindow):
                     
                     for (let i = 0; i <= text.length; i++) {
                         const char = i < text.length ? text[i] : '';
-                        const isWordChar = /[\\w\\u4e00-\\u9fa5]/.test(char); // 包括中文字符
+                        const isWordChar = /[\\w\\u4e00-\\u9fa5]/.test(char); // Including Chinese characters
                         
                         if (isWordChar && !inWord) {
-                            // 单词开始
+                            // Word Start
                             wordStart = i;
                             inWord = true;
                         } else if (!isWordChar && inWord) {
-                            // 单词结束
+                            // Word End
                             const word = text.substring(wordStart, i);
                             if (word.length > 0) {
-                                // 确定加粗部分的长度 (1-3个字母)
-                                let boldLength = Math.ceil(word.length * 0.4); // 40% 的字母加粗
-                                if (boldLength > 3) boldLength = 3; // 最多3个字母
-                                if (boldLength < 1) boldLength = 1; // 至少1个字母
+                                // Determine the length of the bold part (1-3 letters)
+                                let boldLength = Math.ceil(word.length * 0.4); // 40% bold letters
+                                if (boldLength > 3) boldLength = 3; // Up to 3 letters
+                                if (boldLength < 1) boldLength = 1; // At least 1 letter
                                 
                                 const boldPart = word.substring(0, boldLength);
                                 const normalPart = word.substring(boldLength);
                                 
                                 result += '<span class="bionic-bold">' + boldPart + '</span>' + normalPart;
                             }
-                            result += char; // 添加分隔符（空格、标点等）
+                            result += char; // Add separators (spaces, punctuation, etc.)
                             inWord = false;
                         } else if (isWordChar && inWord) {
-                            // 继续在单词中
+                            // Continue in word
                             continue;
                         } else {
-                            // 不在单词中的字符（空格、标点等）
+                            // Characters that are not in words (spaces, punctuation, etc.）
                             result += char;
                         }
                     }
                     
-                    // 替换原始节点
+                    // Replace the original node
                     container.innerHTML = result;
                     node.parentNode.replaceChild(container, node);
                 } else if (node.nodeType === Node.ELEMENT_NODE) {
-                    // 跳过特定标签和已处理的节点
+                    // Skip nodes with specific tags and already processed
                     if (['SCRIPT', 'STYLE', 'NOSCRIPT', 'IFRAME', 'OBJECT', 'EMBED', 'BUTTON', 'SELECT', 'TEXTAREA'].includes(node.tagName) ||
                         (node.classList && node.classList.contains('bionic-processed'))) {
                         return;
                     }
                     
-                    // 处理子节点 (创建副本以避免实时集合问题)
+                    // Handle child nodes (create copies to avoid live collection issues)
                     const childNodes = Array.from(node.childNodes);
                     childNodes.forEach(walkTextNodes);
                 }
             }
             
             try {
-                // 尝试找到主要内容区域
+                // Try to find the main content area
                 const contentContainers = document.querySelectorAll('article, .article, main, .content, .post-content, .entry-content');
                 
                 if (contentContainers.length > 0) {
-                    // 如果找到特定内容容器，只处理这些区域
+                    // If specific content containers are found, only those areas are processed
                     contentContainers.forEach(container => {
                         walkTextNodes(container);
                     });
                 } else {
-                    // 如果没有找到特定容器，处理body下的段落和列表
+                    // If the specified container is not found, process the paragraphs and lists under body
                     const textElements = document.querySelectorAll('p, li, h1, h2, h3, h4, h5, h6');
                     textElements.forEach(el => {
                         walkTextNodes(el);
@@ -212,14 +212,14 @@ class ADHDReader(QMainWindow):
         try:
             result = self.driver.execute_script(bionic_style_script)
         except Exception as e:
-            QMessageBox.critical(self, "Error", f"样式应用失败: {str(e)}")  
+            QMessageBox.critical(self, "Error", f"Style application failed: {str(e)}")  
 
     def toggle_focus_mode(self):
         focus_mode_style = """
-        // 简单的聚焦模式 - 只有上下模糊效果，无控制按钮
+        // Simple focus mode - only up and down blur effect, no control buttons
         const style = document.createElement('style');
         style.innerHTML = `
-            /* 添加遮罩层 */
+            /* Add a mask layer */
             body::before, body::after {
                 content: '';
                 position: fixed;
@@ -229,7 +229,7 @@ class ADHDReader(QMainWindow):
                 pointer-events: none;
             }
             
-            /* 上部遮罩 */
+            /* Upper Mask */
             body::before {
                 top: 0;
                 height: calc(50vh - 100px);
@@ -240,7 +240,7 @@ class ADHDReader(QMainWindow):
                 backdrop-filter: blur(3px);
             }
             
-            /* 下部遮罩 */
+            /* Lower Mask */
             body::after {
                 bottom: 0;
                 height: calc(50vh - 100px);
@@ -253,12 +253,12 @@ class ADHDReader(QMainWindow):
         `;
         
         document.head.appendChild(style);
-        return "聚焦模式已启用";
+        return "Focus mode enabled";
         """
         try:
             result = self.driver.execute_script(focus_mode_style)
         except Exception as e:
-            QMessageBox.critical(self, "Error", f"聚焦模式切换失败: {str(e)}")
+            QMessageBox.critical(self, "Error", f"Focus mode switching failed: {str(e)}")
 
     def closeEvent(self, event):
         try:
