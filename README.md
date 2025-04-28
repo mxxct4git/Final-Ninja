@@ -10,6 +10,19 @@ When finals approach, many students fall into the "procrastination-anxiety-more 
 ## **Introduction**  
 Final Ninja is a desktop AI study buddy designed for finals season. It blends AI-driven planning with fun, interactive gamification to make studying feel like leveling up in a game! From auto-summarizing study materials to generating quizzes, creating focus playlists, and tracking study progress with friends, Final Ninja makes sure your finals prep is smart, engaging, and stress-free. 
 
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=HzwWCRuVafk">
+    <img src="https://img.youtube.com/vi/HzwWCRuVafk/maxresdefault.jpg" alt="Demo Video" width="600">
+  </a>
+</p>
+
+
+## Links
+
+- ([Demo Video](https://www.youtube.com/watch?v=HzwWCRuVafk))
+- ([Devpost](https://devpost.com/software/final-ninja))
+
+
 ## **What Makes It Special?**  
 ❌ **Traditional study tools** → Boring, rigid, one-size-fits-all.  
 ✅ **Final Ninja** → Smart, interactive, and fun!
